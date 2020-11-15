@@ -19,7 +19,7 @@ namespace FinalProject_Chess
         {
             piece_type = type;
         }
-        public bool[,] ValidPath()
+        public bool[,] ValidPath(int row, int col)
         {
             bool[,] bool_map = new bool[8, 8];
             switch(piece_type){
