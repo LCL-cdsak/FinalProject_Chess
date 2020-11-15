@@ -8,6 +8,33 @@ namespace FinalProject_Chess
 {
     class Piece
     {
+        private PieceType _piece_type;
+        public PieceType piece_type {
+            get{
+                return _piece_type;
+            }
+            set
+            {
+
+            }
+        }
+        public bool[,] ValidPath()
+        {
+            bool[,] bool_map = new bool[8, 8];
+            switch(_piece_type){
+                case PieceType.wPawn:
+                case PieceType.bPawn:
+                    break;
+                case PieceType.wRook:
+                case PieceType.bRook:
+                    break;
+                case PieceType.wKnight:
+                case PieceType.bKnight:
+                    break;
+            }
+            return bool_map;
+        }
+
         /*
          * 白方:
          * p:士兵
@@ -30,7 +57,11 @@ namespace FinalProject_Chess
         {
             return (PieceType)Enum.Parse(typeof(PieceType), str, true);
         }
-        enum PieceType
+        static string PieceTypeToImagePath(PieceType type)
+        {
+            return type.ToString() + ".png";
+        }
+        public enum PieceType
         {
             wPawn,
             wRook,
