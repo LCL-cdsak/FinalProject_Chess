@@ -26,6 +26,7 @@ namespace FinalProject_Chess
                 case PieceType.bPawn:
                     break;
                 case PieceType.wRook:
+                    
                 case PieceType.bRook:
                     break;
                 case PieceType.wKnight:
