@@ -78,10 +78,7 @@ namespace FinalProject_Chess
                 _MouseDown = false;
                 bknight.BackColor = Color.Transparent;
             }
-
                 //throw new NotImplementedException();
-            
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
