@@ -58,7 +58,7 @@ namespace FinalProject_Chess
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                     point[i, j] = new Point(j * 70, i * 70);
-            table.BackgroundImage = Image.FromFile("board1.png");
+            table.BackgroundImage = Image.FromFile("board.png");
             Controls.Add(table);
             
             initial();
@@ -74,12 +74,11 @@ namespace FinalProject_Chess
             bknight.SizeMode = PictureBoxSizeMode.StretchImage;
             bknight.Size = new Size(70, 70);
             table.Controls.Add(bknight);
-            bknight.Location = point[0, 1];
+            bknight.Location = point[0, 0];
             bknight.BringToFront();
             bknight.BackColor = Color.Transparent;
             bknight.MouseClick += new MouseEventHandler(knightclicked);
             
-
         }
         private void knightclicked(object sender, MouseEventArgs e)
         {
