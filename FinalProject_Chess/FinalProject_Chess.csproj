@@ -121,5 +121,8 @@
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\board.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
