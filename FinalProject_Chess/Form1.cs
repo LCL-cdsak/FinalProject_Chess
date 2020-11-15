@@ -62,6 +62,7 @@ namespace FinalProject_Chess
             table.BackgroundImage = Image.FromFile("board.png");
             Controls.Add(table);
             table.MouseDown += Table_MouseDown;
+
             initial();
 
         }
