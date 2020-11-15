@@ -77,10 +77,7 @@ namespace FinalProject_Chess
                 bknight.Location = point[y, x];
                 _MouseDown = false;
             }
-
                 //throw new NotImplementedException();
-            
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
