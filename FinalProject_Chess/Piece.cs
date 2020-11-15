@@ -26,20 +26,25 @@ namespace FinalProject_Chess
          * 
          * N:空格
          */
+        static PieceType PieceTypeFromString(string str)
+        {
+            return (PieceType)Enum.Parse(typeof(PieceType), str, true);
+        }
+        enum PieceType
+        {
+            wPawn,
+            wRook,
+            wKnight,
+            wBishop,
+            wQueen,
+            wKing,
+            bPawn,
+            bRook,
+            bKnight,
+            bBishop,
+            bQueen,
+            bKing
+        }
     }
-    enum PieceType
-    {
-        wPawn,
-        wRook,
-        wKnight,
-        wBishop,
-        wQueen,
-        wKing,
-        bPawn,
-        bRook,
-        bKnight,
-        bBishop,
-        bQueen,
-        bKing
-    }
+
 }
