@@ -22,7 +22,6 @@ using System.Windows.Forms;
  * B:主教
  * Q:皇后
  * K:國王 
- *
  * N:空格
  */
 namespace FinalProject_Chess
