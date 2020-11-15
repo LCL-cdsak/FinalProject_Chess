@@ -95,7 +95,7 @@ namespace FinalProject_Chess
             bknight.BringToFront();
             bknight.BackColor = Color.Transparent;
             bknight.MouseClick += new MouseEventHandler(knightclicked);
-  
+
         }
         private void knightclicked(object sender, MouseEventArgs e)
         {
