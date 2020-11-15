@@ -21,7 +21,7 @@ using System.Windows.Forms;
  * H:騎士
  * B:主教
  * Q:皇后
- * K:國王
+ * K:國王 
  * 
  * N:空格
  */
