@@ -19,16 +19,64 @@ namespace FinalProject_Chess
         {
             piece_type = type;
         }
-        public bool[,] ValidPath(int row, int col)
+        public bool[,] ValidPath(int row, int col,Piece[,] now_map)
         {
             bool[,] bool_map = new bool[8, 8];
+               for(int i=0;i<8;i++){
+                        for(int j=0;j<8;j++){
+                            bool_map[i,j]=false;
+                        }
+                    }
             switch(piece_type){
                 case PieceType.wPawn:
                 case PieceType.bPawn:
                     break;
                 case PieceType.wRook:
-                    
                 case PieceType.bRook:
+                     for(int i=1;i<8;i++){
+                        if(col+i<8){
+                            if(now_map[row,col+i]==null){
+                                bool_map[row,col+i]=true;
+                            }
+                            else{
+                                bool_map[row,col+i]=true;
+                                break;
+                            }       
+                        }
+                     } 
+                     for(int i=0;i<8;i++){
+                        if(col-i>=0){
+                            if(now_map[row,col-i]==null){
+                                bool_map[row,col-i]=true;
+                            }
+                            else {
+                                bool_map[row,col-i]=true;
+                                break;
+                            }                                  
+                        }
+                      }
+                     for(int i=0;i<8;i++){
+                        if(row-i>=0){
+                            if(now_map[row-i,col]==null){
+                                bool_map[row-i,col]=true;
+                            }
+                            else {
+                                bool_map[row-i,col]=true;
+                                break;
+                            }                                  
+                        }
+                      }
+                     for(int i=0;i<8;i++){
+                        if(row+i<8){
+                            if(now_map[row+i,col]==null){
+                                bool_map[row+i,col]=true;
+                            }
+                            else {
+                                bool_map[row+i,col]=true;
+                                break;
+                            }                                  
+                        }
+                      }
                     break;
                 case PieceType.wKnight:
                 case PieceType.bKnight:

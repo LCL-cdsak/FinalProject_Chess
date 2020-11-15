@@ -29,7 +29,7 @@ namespace FinalProject_Chess
 {
     public partial class Form1 : Form
     {
-        public Piece[,] grid = new char[8, 8] {
+        public char[,] grid = new char[8, 8] {
                 { 'r','h','b','q','k','b','h','r'},
                 { 'p','p','p','p','p','p','p','p'},
                 { 'n','n','n','n','n','n','n','n'},
