@@ -48,6 +48,7 @@ namespace FinalProject_Chess
         public Point[,] point = new Point[8, 8];
         public Panel table = new Panel();
         public bool _MouseDown = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -60,10 +61,27 @@ namespace FinalProject_Chess
                     point[i, j] = new Point(j * 70, i * 70);
             table.BackgroundImage = Image.FromFile("board.png");
             Controls.Add(table);
-            
+            table.MouseDown += Table_MouseDown;
             initial();
 
         }
+
+        private void Table_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (_MouseDown)
+            {
+                Point p = table.PointToClient(Cursor.Position);
+                int x = p.X / 70;
+                int y = p.Y / 70;
+                bknight.Location = point[y, x];
+                _MouseDown = false;
+            }
+
+                //throw new NotImplementedException();
+            
+
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -78,11 +96,12 @@ namespace FinalProject_Chess
             bknight.BringToFront();
             bknight.BackColor = Color.Transparent;
             bknight.MouseClick += new MouseEventHandler(knightclicked);
-            
+  
         }
         private void knightclicked(object sender, MouseEventArgs e)
         {
-             
+            
+            _MouseDown = true;
         }
     }
 }
