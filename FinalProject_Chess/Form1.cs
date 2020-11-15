@@ -68,14 +68,15 @@ namespace FinalProject_Chess
 
         private void Table_MouseDown(object sender, MouseEventArgs e)
         {
+            PictureBox piece = (PictureBox)sender;
             if (_MouseDown)
             {
                 Point p = table.PointToClient(Cursor.Position);
                 int x = p.X / 70;
                 int y = p.Y / 70;
-                bknight.Location = point[y, x];
+                piece.Location = point[y, x];
                 _MouseDown = false;
-                bknight.BackColor = Color.Transparent;
+                piece.BackColor = Color.Transparent;
             }
                 //throw new NotImplementedException();
         }
@@ -93,10 +94,10 @@ namespace FinalProject_Chess
             bknight.Location = point[0, 0];
             bknight.BringToFront();
             bknight.BackColor = Color.Transparent;
-            //bknight.MouseClick += new MouseEventHandler(knightclicked);
+            bknight.MouseClick += new MouseEventHandler(knightclicked);
   
         }
-        /*private void knightclicked(object sender, MouseEventArgs e)
+        private void knightclicked(object sender, MouseEventArgs e)
         {
             if (_MouseDown)
             {
@@ -108,6 +109,6 @@ namespace FinalProject_Chess
                 _MouseDown = true;
                 bknight.BackColor = Color.LightBlue;
             }
-        }*/
+        }
     }
 }
