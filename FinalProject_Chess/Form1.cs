@@ -29,7 +29,7 @@ namespace FinalProject_Chess
 {
     public partial class Form1 : Form
     {
-        public char[,] grid = new char[8, 8] {
+        public Piece[,] grid = new char[8, 8] {
                 { 'r','h','b','q','k','b','h','r'},
                 { 'p','p','p','p','p','p','p','p'},
                 { 'n','n','n','n','n','n','n','n'},
@@ -45,6 +45,7 @@ namespace FinalProject_Chess
         public PictureBox bkishop = new PictureBox();
         public PictureBox bkook = new PictureBox();
         public PictureBox bpawn = new PictureBox();
+        public PictureBox piece;
         public Point[,] point = new Point[8, 8];
         public Panel table = new Panel();
         public bool _MouseDown = false;
@@ -68,7 +69,6 @@ namespace FinalProject_Chess
 
         private void Table_MouseDown(object sender, MouseEventArgs e)
         {
-            PictureBox piece = (PictureBox)sender;
             if (_MouseDown)
             {
                 Point p = table.PointToClient(Cursor.Position);
@@ -95,10 +95,10 @@ namespace FinalProject_Chess
             bknight.BringToFront();
             bknight.BackColor = Color.Transparent;
             bknight.MouseClick += new MouseEventHandler(knightclicked);
-
-        }
+          }
         private void knightclicked(object sender, MouseEventArgs e)
         {
+            piece = (PictureBox)sender;
             if (_MouseDown)
             {
                 _MouseDown = false;

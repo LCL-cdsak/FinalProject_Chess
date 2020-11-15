@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FinalProject_Chess
 {
-    class chess
+    class Chess
     {
           
     }

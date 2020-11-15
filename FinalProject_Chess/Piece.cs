@@ -8,20 +8,21 @@ namespace FinalProject_Chess
 {
     class Piece
     {
-        private PieceType _piece_type;
-        public PieceType piece_type {
-            get{
-                return _piece_type;
-            }
-            set
-            {
-
-            }
+        public PieceType piece_type;
+        public Piece(string piece_type_name)
+        {
+            if (!Enum.TryParse(piece_type_name, true, out piece_type))
+                // no match Enum type
+                Console.WriteLine("bug");
         }
-        public bool[,] ValidPath()
+        public Piece(PieceType type)
+        {
+            piece_type = type;
+        }
+        public bool[,] ValidPath(int row, int col)
         {
             bool[,] bool_map = new bool[8, 8];
-            switch(_piece_type){
+            switch(piece_type){
                 case PieceType.wPawn:
                 case PieceType.bPawn:
                     break;
