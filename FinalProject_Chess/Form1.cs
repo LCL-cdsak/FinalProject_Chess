@@ -60,7 +60,6 @@ namespace FinalProject_Chess
                     point[i, j] = new Point(j * 70, i * 70);
             table.BackgroundImage = Image.FromFile("board.png");
             Controls.Add(table);
-            
             initial();
 
         }
