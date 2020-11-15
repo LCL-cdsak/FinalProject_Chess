@@ -58,7 +58,7 @@ namespace FinalProject_Chess
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
                     point[i, j] = new Point(j * 70, i * 70);
-            table.BackgroundImage = Image.FromFile("board2.png");
+            table.BackgroundImage = Image.FromFile("board.png");
             Controls.Add(table);
             
             initial();
