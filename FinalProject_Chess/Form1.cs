@@ -76,6 +76,7 @@ namespace FinalProject_Chess
                 int y = p.Y / 70;
                 bknight.Location = point[y, x];
                 _MouseDown = false;
+                bknight.BackColor = Color.Transparent;
             }
 
                 //throw new NotImplementedException();
@@ -101,8 +102,17 @@ namespace FinalProject_Chess
         }
         private void knightclicked(object sender, MouseEventArgs e)
         {
+            if (_MouseDown)
+            {
+                _MouseDown = false;
+                bknight.BackColor = Color.Transparent;
+            }
+            else
+            {
+                _MouseDown = true;
+                bknight.BackColor = Color.LightBlue;
+            }
             
-            _MouseDown = true;
         }
     }
 }
