@@ -21,7 +21,7 @@ using System.Windows.Forms;
  * H:騎士
  * B:主教
  * Q:皇后
- * K:國王 
+ * K:國王
  * 
  * N:空格
  */
@@ -49,6 +49,7 @@ namespace FinalProject_Chess
         public Panel table = new Panel();
         public bool _MouseDown = false;
 
+
         public Form1()
         {
             InitializeComponent();
@@ -62,9 +63,7 @@ namespace FinalProject_Chess
             table.BackgroundImage = Image.FromFile("board.png");
             Controls.Add(table);
             table.MouseDown += Table_MouseDown;
-
             initial();
-
         }
 
         private void Table_MouseDown(object sender, MouseEventArgs e)
@@ -94,10 +93,10 @@ namespace FinalProject_Chess
             bknight.Location = point[0, 0];
             bknight.BringToFront();
             bknight.BackColor = Color.Transparent;
-            bknight.MouseClick += new MouseEventHandler(knightclicked);
+            //bknight.MouseClick += new MouseEventHandler(knightclicked);
   
         }
-        private void knightclicked(object sender, MouseEventArgs e)
+        /*private void knightclicked(object sender, MouseEventArgs e)
         {
             if (_MouseDown)
             {
@@ -109,7 +108,6 @@ namespace FinalProject_Chess
                 _MouseDown = true;
                 bknight.BackColor = Color.LightBlue;
             }
-            
-        }
+        }*/
     }
 }
