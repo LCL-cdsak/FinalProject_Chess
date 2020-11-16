@@ -39,4 +39,5 @@ namespace FinalProject_Chess
             }
             return map;
         }
+    }
 }
