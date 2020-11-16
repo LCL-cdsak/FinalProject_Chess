@@ -8,6 +8,7 @@ namespace FinalProject_Chess
 {
     class Chess
     {
+
         public char[,] init_map = new char[8, 8] {
                 { 'r','h','b','q','k','b','h','r'},
                 { 'p','p','p','p','p','p','p','p'},
@@ -67,6 +68,11 @@ namespace FinalProject_Chess
                             break;
                     }
                 }
+        }
+        public bool[,] T(int row, int col)
+        {
+            Piece test = new Piece(Piece.PieceType.bKnight);
+            return test.ValidPath(row, col, map);
         }
     }
 }

@@ -32,6 +32,10 @@ namespace FinalProject_Chess
                     break;
                 case PieceType.bPawn:
                     break;
+                case PieceType.bBishop:
+                case PieceType.wBishop:
+                    
+                    break;
                 case PieceType.wRook:
                 case PieceType.bRook:
                      for(int i=1;i<8;i++){
