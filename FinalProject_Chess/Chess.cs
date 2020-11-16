@@ -8,6 +8,7 @@ namespace FinalProject_Chess
 {
     class Chess
     {
+
         public char[,] init_map = new char[8, 8] {
                 { 'r','h','b','q','k','b','h','r'},
                 { 'p','p','p','p','p','p','p','p'},
@@ -44,5 +45,6 @@ namespace FinalProject_Chess
             }
             return chess_map;
         }
+     
     }
 }
