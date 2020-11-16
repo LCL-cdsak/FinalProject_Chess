@@ -104,28 +104,32 @@ namespace FinalProject_Chess
          * 
          * N:空格
          */
-        static PieceType PieceTypeFromString(string str)
+        public static PieceType PieceTypeFromString(string str)
         {
             return (PieceType)Enum.Parse(typeof(PieceType), str, true);
         }
-        static string PieceTypeToImagePath(PieceType type)
+        public static string PieceTypeToImagePath(PieceType type)
         {
             return type.ToString() + ".png";
         }
+        public static PieceType PieceTypeFromChar(char c)
+        {
+            return PieceTypeFromString(Enum.GetName(typeof(Piece), c));
+        }
         public enum PieceType
         {
-            wPawn,
-            wRook,
-            wKnight,
-            wBishop,
-            wQueen,
-            wKing,
-            bPawn,
-            bRook,
-            bKnight,
-            bBishop,
-            bQueen,
-            bKing
+            wPawn='p',
+            wRook='r',
+            wKnight='h',
+            wBishop='b',
+            wQueen='q',
+            wKing='k',
+            bPawn='P',
+            bRook='R',
+            bKnight='H',
+            bBishop='B',
+            bQueen='Q',
+            bKing='K'
         }
     }
 
