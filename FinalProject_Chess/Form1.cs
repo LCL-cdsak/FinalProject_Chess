@@ -30,12 +30,7 @@ namespace FinalProject_Chess
     public partial class Form1 : Form
     {
         Chess chess = new Chess();
-        public PictureBox bknight = new PictureBox();
-        public PictureBox bking = new PictureBox();
-        public PictureBox bkueen = new PictureBox();
-        public PictureBox bkishop = new PictureBox();
-        public PictureBox bkook = new PictureBox();
-        public PictureBox bpawn = new PictureBox();
+        public PictureBox[] pics= new PictureBox[32];//used to display pieces related to map
         public PictureBox piece;
         public Point[,] point = new Point[8, 8];
         public Panel table = new Panel();
@@ -54,7 +49,6 @@ namespace FinalProject_Chess
             Controls.Add(table);
             table.MouseDown += Table_MouseDown;
             initial();
-           
         }
 
         private void Table_MouseDown(object sender, MouseEventArgs e)
@@ -68,7 +62,6 @@ namespace FinalProject_Chess
                 _MouseDown = false;
                 piece.BackColor = Color.Transparent;
             }
-                //throw new NotImplementedException();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -77,32 +70,28 @@ namespace FinalProject_Chess
         }
         private void initial()
         {
-
+            for (int i = 0; i < 32; i++)
+            {
+                pics[i] = new PictureBox();
+                table.Controls.Add(pics[i]);
+                pics[i].Size = new Size(70, 70);
+                pics[i].SizeMode = PictureBoxSizeMode.StretchImage;
+                pics[i].BringToFront();
+                pics[i].BackColor = Color.Transparent;
+            }
+            int c = 0;
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    pics[c++].Image = Image.FromFile(Piece.PieceTypeToImagePath(chess.map[i, j].piece_type));
+                    pics[c - 1].Location = point[i, j];
+                }
+            for (int i = 6; i < 8; i++)
+                for (int j = 0; j < 8; j++)
+                {
+                    pics[c++].Image = Image.FromFile(Piece.PieceTypeToImagePath(chess.map[i, j].piece_type));
+                    pics[c - 1].Location = point[i, j];
+                }
         }
-        /*private void initial()
-        {//pieces
-            bknight.Image = Image.FromFile("bKnight.png");
-            bknight.SizeMode = PictureBoxSizeMode.StretchImage;
-            bknight.Size = new Size(70, 70);
-            table.Controls.Add(bknight);
-            bknight.Location = point[0, 0];
-            bknight.BringToFront();
-            bknight.BackColor = Color.Transparent;
-            bknight.MouseClick += new MouseEventHandler(knightclicked);
-          }
-        private void knightclicked(object sender, MouseEventArgs e)
-        {
-            piece = (PictureBox)sender;
-            if (_MouseDown)
-            {
-                _MouseDown = false;
-                bknight.BackColor = Color.Transparent;
-            }
-            else
-            {
-                _MouseDown = true;
-                bknight.BackColor = Color.LightBlue;
-            }
-        }*/
     }
 }

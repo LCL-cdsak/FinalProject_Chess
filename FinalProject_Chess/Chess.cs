@@ -19,68 +19,26 @@ namespace FinalProject_Chess
                 { 'P','P','P','P','P','P','P','P'},
                 { 'R','H','B','Q','K','B','H','R'}
             };
-        public Piece[,] map = new Piece[8, 8];
-        public Chess()//constructor
+        public Piece[,] chess_map = new Piece[8, 8];
+
+        Piece[,] CreateChessMapFromChar(char[,] char_table)
         {
-            for(int i=0;i<8;i++)
-                for(int j=0;j<8;j++)
+            Piece[,] map = new Piece[8, 8];
+            for (int row = 0; row < 8; ++row)
+            {
+                for (int col = 0; col < 8; ++col)
                 {
-                    
-                    switch (init_map[i,j])
+                    if (char_table[row, col] == 'n')
                     {
-                        case 'r':
-                            map[i, j] = new Piece("bRook");
-                            map[i, j].piece_type = Piece.PieceType.bRook;
-                            break;
-                        case 'h':
-                            map[i, j] = new Piece("bKnight");
-                            map[i, j].piece_type = Piece.PieceType.bKnight;
-                            break;
-                        case 'b':
-                            map[i, j] = new Piece("bBishop");
-                            map[i, j].piece_type = Piece.PieceType.bBishop;
-                            break;
-                        case 'q':
-                            map[i, j] = new Piece("bQueen");
-                            map[i, j].piece_type = Piece.PieceType.bQueen;
-                            break;
-                        case 'k':
-                            map[i, j] = new Piece("bKing");
-                            map[i, j].piece_type = Piece.PieceType.bKing;
-                            break;
-                        case 'p':
-                            map[i, j] = new Piece("bPawn");
-                            map[i, j].piece_type = Piece.PieceType.bPawn;
-                            break;
-                        case 'R':
-                            map[i, j] = new Piece("wRook");
-                            map[i, j].piece_type = Piece.PieceType.wRook;
-                            break;
-                        case 'H':
-                            map[i, j] = new Piece("wKnight");
-                            map[i, j].piece_type = Piece.PieceType.wKnight;
-                            break;
-                        case 'B':
-                            map[i, j] = new Piece("wBishop");
-                            map[i, j].piece_type = Piece.PieceType.wBishop;
-                            break;
-                        case 'Q':
-                            map[i, j] = new Piece("wQueen");
-                            map[i, j].piece_type = Piece.PieceType.wQueen;
-                            break;
-                        case 'K':
-                            map[i, j] = new Piece("wKing");
-                            map[i, j].piece_type = Piece.PieceType.wKing;
-                            break;
-                        case 'P':
-                            map[i, j] = new Piece("wPawn");
-                            map[i, j].piece_type = Piece.PieceType.wPawn;
-                            break;
-                        default:
-                            map[i, j] = null;
-                            break;
+                        map[row, col] = null;
+                    }
+                    else
+                    {
+                        map[row, col] = new Piece(Piece.PieceTypeFromChar(char_table[row, col]));
                     }
                 }
+            }
+            return map;
         }
      
     }
