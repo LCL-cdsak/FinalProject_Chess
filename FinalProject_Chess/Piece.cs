@@ -250,6 +250,16 @@ namespace FinalProject_Chess
         {
             return PieceTypeFromString(Enum.GetName(typeof(PieceType), c));
         }
+        public static string PieceTypeTeam(PieceType type)
+        {
+            if (char.IsLower((char)type)){
+                return "w";
+            }
+            else
+            {
+                return "b";
+            }
+        }
         public enum PieceType
         {
             wPawn='p',
