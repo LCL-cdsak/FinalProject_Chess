@@ -29,6 +29,7 @@ namespace FinalProject_Chess
                     }
             switch(piece_type){
                 case PieceType.wPawn:
+                    break;
                 case PieceType.bPawn:
                     break;
                 case PieceType.wRook:
