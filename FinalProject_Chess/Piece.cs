@@ -81,6 +81,14 @@ namespace FinalProject_Chess
                     break;
                 case PieceType.wKnight:
                 case PieceType.bKnight:
+                    if (row - 2 >= 0 && col - 1 >= 0)bool_map[row - 2, col - 1] = true;
+                    if (row - 1 >= 0 && col - 2 >= 0) bool_map[row - 1, col - 2] = true;
+                    if (row + 1 < 8 && col - 2 >=0) bool_map[row + 1, col - 2] = true;
+                    if (row + 2 < 8 && col - 1 >=0) bool_map[row + 2, col - 1] = true;
+                    if (row + 2 < 8 && col + 1<8) bool_map[row + 2, col + 1] = true;
+                    if (row + 1 < 8 && col + 2 < 8) bool_map[row + 1, col + 2] = true;
+                    if (row - 1 >= 0 && col + 2 < 8) bool_map[row - 1, col + 2] = true;
+                    if (row - 2 >= 0 && col + 1 < 8) bool_map[row - 2, col + 1] = true;
                     break;
             }
             return bool_map;
@@ -104,28 +112,32 @@ namespace FinalProject_Chess
          * 
          * N:空格
          */
-        static PieceType PieceTypeFromString(string str)
+        public static PieceType PieceTypeFromString(string str)
         {
             return (PieceType)Enum.Parse(typeof(PieceType), str, true);
         }
-        static string PieceTypeToImagePath(PieceType type)
+        public static string PieceTypeToImagePath(PieceType type)
         {
             return type.ToString() + ".png";
         }
+        public static PieceType PieceTypeFromChar(char c)
+        {
+            return PieceTypeFromString(Enum.GetName(typeof(Piece), c));
+        }
         public enum PieceType
         {
-            wPawn,
-            wRook,
-            wKnight,
-            wBishop,
-            wQueen,
-            wKing,
-            bPawn,
-            bRook,
-            bKnight,
-            bBishop,
-            bQueen,
-            bKing
+            wPawn='p',
+            wRook='r',
+            wKnight='h',
+            wBishop='b',
+            wQueen='q',
+            wKing='k',
+            bPawn='P',
+            bRook='R',
+            bKnight='H',
+            bBishop='B',
+            bQueen='Q',
+            bKing='K'
         }
     }
 
