@@ -54,7 +54,7 @@ namespace FinalProject_Chess
             Controls.Add(table);
             table.MouseDown += Table_MouseDown;
             initial();
-            Console.WriteLine("test");
+            
         }
 
         private void Table_MouseDown(object sender, MouseEventArgs e)
@@ -76,6 +76,10 @@ namespace FinalProject_Chess
 
         }
         private void initial()
+        {
+
+        }
+        /*private void initial()
         {//pieces
             bknight.Image = Image.FromFile("bKnight.png");
             bknight.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -99,6 +103,6 @@ namespace FinalProject_Chess
                 _MouseDown = true;
                 bknight.BackColor = Color.LightBlue;
             }
-        }
+        }*/
     }
 }
