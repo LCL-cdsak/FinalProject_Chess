@@ -141,7 +141,7 @@ namespace FinalProject_Chess
         }
         public static PieceType PieceTypeFromChar(char c)
         {
-            return PieceTypeFromString(Enum.GetName(typeof(Piece), c));
+            return PieceTypeFromString(Enum.GetName(typeof(PieceType), c));
         }
         public enum PieceType
         {
@@ -159,5 +159,4 @@ namespace FinalProject_Chess
             bKing = 'K'
         }
     }
-
 }

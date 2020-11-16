@@ -18,26 +18,31 @@ namespace FinalProject_Chess
                 { 'P','P','P','P','P','P','P','P'},
                 { 'R','H','B','Q','K','B','H','R'}
             };
-        public Piece[,] chess_map = new Piece[8, 8];
+        public Piece[,] map = new Piece[8, 8];
+
+        public Chess()
+        {
+            map = CreateChessMapFromChar(init_map);
+        }
 
         Piece[,] CreateChessMapFromChar(char[,] char_table)
         {
-            Piece[,] map = new Piece[8, 8];
+            Piece[,] chess_map = new Piece[8, 8];
             for (int row = 0; row < 8; ++row)
             {
                 for (int col = 0; col < 8; ++col)
                 {
                     if (char_table[row, col] == 'n')
                     {
-                        map[row, col] = null;
+                        chess_map[row, col] = null;
                     }
                     else
                     {
-                        map[row, col] = new Piece(Piece.PieceTypeFromChar(char_table[row, col]));
+                        chess_map[row, col] = new Piece(Piece.PieceTypeFromChar(char_table[row, col]));
                     }
                 }
             }
-            return map;
+            return chess_map;
         }
     }
 }
