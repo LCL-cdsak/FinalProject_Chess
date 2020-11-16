@@ -29,59 +29,54 @@ namespace FinalProject_Chess
                     }
             switch(piece_type){
                 case PieceType.wPawn:
+                    if (row == 6)
+                    {
+                        bool_map[row - 1, col] = true;
+                        bool_map[row - 2, col] = true;
+                    }
+                    else
+                    {
+                        bool_map[row - 1, col] = true;
+                        if (now_map[row - 1, col - 1] != null) bool_map[row - 1, col - 1] = true;
+                        if (now_map[row - 1, col + 1] != null) bool_map[row - 1, col + 1] = true;
+                    }
                     break;
                 case PieceType.bPawn:
+                    if (row == 1)
+                    {
+                        bool_map[row + 1, col] = true;
+                        bool_map[row + 2, col] = true;
+                    }
+                    else
+                    {
+                        bool_map[row +1, col] = true;
+                        if (now_map[row + 1, col - 1] != null) bool_map[row + 1, col - 1] = true;
+                        if (now_map[row + 1, col + 1] != null) bool_map[row + 1, col + 1] = true;
+                    }
+                    break;
+                case PieceType.bKing:
+                case PieceType.wKing:
+                    for(int i = -1; i < 2; i++)
+                    {
+                        for(int j = -1; j < 2; j++)
+                        {
+                            if (row + i < 0 || row + i >= 8 || col + i < 0 || col + i >= 8 || (j == 0 && i == 0)) break;
+                            else bool_map[row + i, col + j] = true;
+                        }
+                    }
+                    break;
+                case PieceType.bQueen:
+                case PieceType.wQueen:
+                    Diagonal_path(row, col, now_map, bool_map);
+                    Cross_path(row, col, now_map, bool_map);
                     break;
                 case PieceType.bBishop:
                 case PieceType.wBishop:
-                    
+                    Diagonal_path(row, col, now_map, bool_map);
                     break;
                 case PieceType.wRook:
                 case PieceType.bRook:
-                     for(int i=1;i<8;i++){
-                        if(col+i<8){
-                            if(now_map[row,col+i]==null){
-                                bool_map[row,col+i]=true;
-                            }
-                            else{
-                                bool_map[row,col+i]=true;
-                                break;
-                            }       
-                        }
-                     } 
-                     for(int i=0;i<8;i++){
-                        if(col-i>=0){
-                            if(now_map[row,col-i]==null){
-                                bool_map[row,col-i]=true;
-                            }
-                            else {
-                                bool_map[row,col-i]=true;
-                                break;
-                            }                                  
-                        }
-                      }
-                     for(int i=0;i<8;i++){
-                        if(row-i>=0){
-                            if(now_map[row-i,col]==null){
-                                bool_map[row-i,col]=true;
-                            }
-                            else {
-                                bool_map[row-i,col]=true;
-                                break;
-                            }                                  
-                        }
-                      }
-                     for(int i=0;i<8;i++){
-                        if(row+i<8){
-                            if(now_map[row+i,col]==null){
-                                bool_map[row+i,col]=true;
-                            }
-                            else {
-                                bool_map[row+i,col]=true;
-                                break;
-                            }                                  
-                        }
-                      }
+                    Cross_path(row, col, now_map, bool_map);
                     break;
                 case PieceType.wKnight:
                 case PieceType.bKnight:
@@ -97,15 +92,142 @@ namespace FinalProject_Chess
             }
             return bool_map;
         }
+        private void Cross_path(int row,int col,Piece[,] now_map, bool[,] bool_map)//判斷十字路徑
+        {
+            for (int i = 1; i < 8; i++)
+            {
+                if (col + i < 8)
+                {
+                    if (now_map[row, col + i] == null)
+                    {
+                        bool_map[row, col + i] = true;
+                    }
+                    else
+                    {
+                        bool_map[row, col + i] = true;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                if (col - i >= 0)
+                {
+                    if (now_map[row, col - i] == null)
+                    {
+                        bool_map[row, col - i] = true;
+                    }
+                    else
+                    {
+                        bool_map[row, col - i] = true;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                if (row - i >= 0)
+                {
+                    if (now_map[row - i, col] == null)
+                    {
+                        bool_map[row - i, col] = true;
+                    }
+                    else
+                    {
+                        bool_map[row - i, col] = true;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                if (row + i < 8)
+                {
+                    if (now_map[row + i, col] == null)
+                    {
+                        bool_map[row + i, col] = true;
+                    }
+                    else
+                    {
+                        bool_map[row + i, col] = true;
+                        break;
+                    }
+                }
+            }
+            return;
+        }
+        public void Diagonal_path(int row, int col, Piece[,] now_map, bool[,] bool_map)//判斷對角路徑
+        {
+            for (int i = 1; i < 8; i++)
+            {
+                if (row + i < 8 && col + i < 8)
+                {
+                    if (now_map[row + i, col + i] == null)
+                    {
+                        bool_map[row + i, col + i] = true;
+                    }
+                    else
+                    {
+                        bool_map[row + i, col + i] = true;
+                        break;
+                    }
+                }
+            }
+            for (int i = 1; i < 8; i++)
+            {
+                if (row - i >0 && col + i < 8)
+                {
+                    if (now_map[row - i, col + i] == null)
+                    {
+                        bool_map[row - i, col + i] = true;
+                    }
+                    else
+                    {
+                        bool_map[row - i, col + i] = true;
+                        break;
+                    }
+                }
+            }
+            for (int i = 1; i < 8; i++)
+            {
+                if (row + i < 8 && col - i >0)
+                {
+                    if (now_map[row + i, col - i] == null)
+                    {
+                        bool_map[row + i, col - i] = true;
+                    }
+                    else
+                    {
+                        bool_map[row + i, col - i] = true;
+                        break;
+                    }
+                }
+            }
+            for (int i = 1; i < 8; i++)
+            {
+                if (row - i >0 && col - i >0)
+                {
+                    if (now_map[row - i, col - i] == null)
+                    {
+                        bool_map[row - i, col - i] = true;
+                    }
+                    else
+                    {
+                        bool_map[row - i, col - i] = true;
+                        break;
+                    }
+                }
+            }
+        }
 
         /*
          * 白方:
-         * p:士兵
+         * p:士兵 
          * r:城堡
-         * h:騎士
-         * b:主教
-         * q:皇后
-         * k:國王
+         * h:騎士 
+         * b:主教 
+         * q:皇后 
+         * k:國王 
          * 黑方:
          * P:士兵
          * R:城堡

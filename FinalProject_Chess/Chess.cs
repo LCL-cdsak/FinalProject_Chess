@@ -82,10 +82,6 @@ namespace FinalProject_Chess
                     }
                 }
         }
-        public bool[,] T(int row, int col)
-        {
-            Piece test = new Piece(Piece.PieceType.bKnight);
-            return test.ValidPath(row, col, map);
-        }
+     
     }
 }

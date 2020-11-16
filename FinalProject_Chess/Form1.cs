@@ -54,7 +54,7 @@ namespace FinalProject_Chess
             Controls.Add(table);
             table.MouseDown += Table_MouseDown;
             initial();
-            
+           
         }
 
         private void Table_MouseDown(object sender, MouseEventArgs e)
