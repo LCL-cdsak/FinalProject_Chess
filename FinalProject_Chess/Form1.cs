@@ -29,16 +29,7 @@ namespace FinalProject_Chess
 {
     public partial class Form1 : Form
     {
-        public Piece[,] grid = new char[8, 8] {
-                { 'r','h','b','q','k','b','h','r'},
-                { 'p','p','p','p','p','p','p','p'},
-                { 'n','n','n','n','n','n','n','n'},
-                { 'n','n','n','n','n','n','n','n'},
-                { 'n','n','n','n','n','n','n','n'},
-                { 'n','n','n','n','n','n','n','n'},
-                { 'P','P','P','P','P','P','P','P'},
-                { 'R','H','B','Q','K','B','H','R'}
-            };
+       
         public PictureBox bknight = new PictureBox();
         public PictureBox bking = new PictureBox();
         public PictureBox bkueen = new PictureBox();
