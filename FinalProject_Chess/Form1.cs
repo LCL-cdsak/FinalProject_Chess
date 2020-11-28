@@ -32,9 +32,10 @@ namespace FinalProject_Chess
         Chess chess = new Chess();
         public PictureBox[] pics= new PictureBox[32];//used to display pieces related to map
         public PictureBox piece;
-        public Point[,] point = new Point[8, 8];
+        public Point[,] point = new Point[8, 8];// the coordinate of each block
         public Panel table = new Panel();
-        public bool _MouseDown = false;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -53,14 +54,30 @@ namespace FinalProject_Chess
 
         private void Table_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_MouseDown)
+            Point p = table.PointToClient(Cursor.Position);
+            int x = p.X / 70;
+            int y = p.Y / 70;
+            // MessageBox.Show("", $"{x} {y}", MessageBoxButtons.OK);
+            if (chess.is_selected_piece)
             {
-                Point p = table.PointToClient(Cursor.Position);
-                int x = p.X / 70;
-                int y = p.Y / 70;
+                // move the selected piece if path is valid
+                if(!chess.MovePiece(y, x))
+                {
+                    return;
+                }
+                // the piece is now moved to new location
+                
                 piece.Location = point[y, x];
-                _MouseDown = false;
                 piece.BackColor = Color.Transparent;
+            }
+            else
+            {
+                // select the piece if player valid
+                if(chess.SelectPiece(y, x))
+                {
+                    piece = pics[GetPictureBoxIndexFromLocation(y, x)];
+                    piece.BackColor = Color.LightBlue;
+                }
             }
         }
 
@@ -78,20 +95,37 @@ namespace FinalProject_Chess
                 pics[i].SizeMode = PictureBoxSizeMode.StretchImage;
                 pics[i].BringToFront();
                 pics[i].BackColor = Color.Transparent;
+                pics[i].MouseDown += Table_MouseDown;
             }
             int c = 0;
             for (int i = 0; i < 2; i++)
+            {
                 for (int j = 0; j < 8; j++)
                 {
-                    pics[c++].Image = Image.FromFile(Piece.PieceTypeToImagePath(chess.map[i, j].piece_type));
+                    pics[c++].Image = Image.FromFile(Piece.PieceToImagePath(chess.map[i, j]));
                     pics[c - 1].Location = point[i, j];
                 }
+            }
             for (int i = 6; i < 8; i++)
+            {
                 for (int j = 0; j < 8; j++)
                 {
-                    pics[c++].Image = Image.FromFile(Piece.PieceTypeToImagePath(chess.map[i, j].piece_type));
+                    pics[c++].Image = Image.FromFile(Piece.PieceToImagePath(chess.map[i, j]));
                     pics[c - 1].Location = point[i, j];
                 }
+            }
+
+        }
+        public int GetPictureBoxIndexFromLocation(int row, int col)
+        {
+            for(int i=0; i<32; ++i)
+            {
+                if(pics[i].Location == point[row, col])
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

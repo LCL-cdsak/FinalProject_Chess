@@ -9,16 +9,20 @@ namespace FinalProject_Chess
     class Piece
     {
         public PieceType piece_type;
-        public Piece(string piece_type_name)
+        public string team;
+        public Piece(string _team, string piece_type_name)
         {
             if (!Enum.TryParse(piece_type_name, true, out piece_type))
                 // no match Enum type
                 Console.WriteLine("bug");
+            team = _team;
         }
-        public Piece(PieceType type)
+        public Piece(string _team, PieceType _piece_type)
         {
-            piece_type = type;
+            piece_type = _piece_type;
+            team = _team;
         }
+
         public bool[,] ValidPath(int row, int col,Piece[,] now_map)
         {
             bool[,] bool_map = new bool[8, 8];
@@ -27,35 +31,42 @@ namespace FinalProject_Chess
                             bool_map[i,j]=false;
                         }
                     }
+            bool_map[row, col] = true;
             switch(piece_type){
-                case PieceType.wPawn:
-                    if (row == 6)
+                case PieceType.Pawn:
+                    if(team == "white")
                     {
-                        bool_map[row - 1, col] = true;
-                        bool_map[row - 2, col] = true;
+                        if (row == 6)
+                        {
+                            bool_map[row - 1, col] = true;
+                            bool_map[row - 2, col] = true;
+                        }
+                        else
+                        {
+                            bool_map[row - 1, col] = true;
+                            if (now_map[row - 1, col - 1] != null) bool_map[row - 1, col - 1] = true;
+                            if (now_map[row - 1, col + 1] != null) bool_map[row - 1, col + 1] = true;
+                        }
+                        break;
                     }
-                    else
+                    else if(team == "black")
                     {
-                        bool_map[row - 1, col] = true;
-                        if (now_map[row - 1, col - 1] != null) bool_map[row - 1, col - 1] = true;
-                        if (now_map[row - 1, col + 1] != null) bool_map[row - 1, col + 1] = true;
+                        if (row == 1)
+                        {
+                            bool_map[row + 1, col] = true;
+                            bool_map[row + 2, col] = true;
+                        }
+                        else
+                        {
+                            bool_map[row + 1, col] = true;
+                            if (now_map[row + 1, col - 1] != null) bool_map[row + 1, col - 1] = true;
+                            if (now_map[row + 1, col + 1] != null) bool_map[row + 1, col + 1] = true;
+                        }
+                        break;
                     }
                     break;
-                case PieceType.bPawn:
-                    if (row == 1)
-                    {
-                        bool_map[row + 1, col] = true;
-                        bool_map[row + 2, col] = true;
-                    }
-                    else
-                    {
-                        bool_map[row +1, col] = true;
-                        if (now_map[row + 1, col - 1] != null) bool_map[row + 1, col - 1] = true;
-                        if (now_map[row + 1, col + 1] != null) bool_map[row + 1, col + 1] = true;
-                    }
-                    break;
-                case PieceType.bKing:
-                case PieceType.wKing:
+
+                case PieceType.King:
                     for(int i = -1; i < 2; i++)
                     {
                         for(int j = -1; j < 2; j++)
@@ -65,21 +76,21 @@ namespace FinalProject_Chess
                         }
                     }
                     break;
-                case PieceType.bQueen:
-                case PieceType.wQueen:
+
+                case PieceType.Queen:
                     Diagonal_path(row, col, now_map, bool_map);
                     Cross_path(row, col, now_map, bool_map);
                     break;
-                case PieceType.bBishop:
-                case PieceType.wBishop:
+
+                case PieceType.Bishop:
                     Diagonal_path(row, col, now_map, bool_map);
                     break;
-                case PieceType.wRook:
-                case PieceType.bRook:
+
+                case PieceType.Rook:
                     Cross_path(row, col, now_map, bool_map);
                     break;
-                case PieceType.wKnight:
-                case PieceType.bKnight:
+
+                case PieceType.Knight:
                     if (row - 2 >= 0 && col - 1 >= 0)bool_map[row - 2, col - 1] = true;
                     if (row - 1 >= 0 && col - 2 >= 0) bool_map[row - 1, col - 2] = true;
                     if (row + 1 < 8 && col - 2 >=0) bool_map[row + 1, col - 2] = true;
@@ -242,38 +253,40 @@ namespace FinalProject_Chess
         {
             return (PieceType)Enum.Parse(typeof(PieceType), str, true);
         }
-        public static string PieceTypeToImagePath(PieceType type)
+        public static string PieceToImagePath(Piece piece)
         {
-            return type.ToString() + ".png";
+            switch (piece.team)
+            {
+                case "white":
+                    return "w" + piece.piece_type.ToString() + ".png";
+                case "black":
+                    return "b" + piece.piece_type.ToString() + ".png";
+                default:
+                    return "NULL";
+            }
+                
         }
-        public static PieceType PieceTypeFromChar(char c)
+        public static Piece PieceFromChar(char c)
         {
-            return PieceTypeFromString(Enum.GetName(typeof(PieceType), c));
-        }
-        public static string PieceTypeTeam(PieceType type)
-        {
-            if (char.IsLower((char)type)){
-                return "w";
+            if (char.IsUpper(c))
+            {
+                return new Piece("black", Enum.GetName(typeof(PieceType), char.ToUpper(c)));
             }
             else
             {
-                return "b";
+                return new Piece("white", Enum.GetName(typeof(PieceType), char.ToUpper(c)));
             }
+            
         }
+
         public enum PieceType
         {
-            wPawn='p',
-            wRook='r',
-            wKnight='h',
-            wBishop='b',
-            wQueen='q',
-            wKing='k',
-            bPawn='P',
-            bRook='R',
-            bKnight='H',
-            bBishop='B',
-            bQueen='Q',
-            bKing='K'
+            Pawn='P',
+            Rook='R',
+            Knight='H',
+            Bishop='B',
+            Queen='Q',
+            King='K'
         }
     }
 }
