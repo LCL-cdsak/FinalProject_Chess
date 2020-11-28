@@ -56,7 +56,6 @@ namespace FinalProject_Chess
             }
             return chess_map;
         }
-           
         public bool[,] ValidPath(int row, int col)
         {
             // wrap the Piece.ValidPath, no need for arg "map")
@@ -67,7 +66,7 @@ namespace FinalProject_Chess
             // check if player want to deselected the piece
             if (is_selected_piece)
             {
-                return selected_piece_location[0] == row && selected_piece_location[1] == col;
+                return (selected_piece_location[0] == row) && (selected_piece_location[1] == col);
             }
             return false;
         }
@@ -88,8 +87,20 @@ namespace FinalProject_Chess
             }
             
         }
-        public bool MovePiece(int row, int col)
+        public bool MovePiece(int row, int col, out bool is_deselect)
         {
+            if (IsDeselect(row, col))
+            {
+                // player want to deselect the piece, let it be a false move
+                is_selected_piece = false;
+                is_deselect = true;
+                return false;
+            }
+            else
+            {
+                is_deselect = false;
+            }
+
             if (!is_selected_piece)
             {
                 // no piece selected

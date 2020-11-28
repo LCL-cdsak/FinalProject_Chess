@@ -61,12 +61,18 @@ namespace FinalProject_Chess
             if (chess.is_selected_piece)
             {
                 // move the selected piece if path is valid
-                if(!chess.MovePiece(y, x))
+                if (!chess.MovePiece(y, x, out bool is_deselect))
                 {
+                    if (is_deselect)
+                    {
+                        // not only no move, set the piece to Transparent
+                        piece.BackColor = Color.Transparent;
+                        return;
+                    }
                     return;
                 }
+
                 // the piece is now moved to new location
-                
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;
             }

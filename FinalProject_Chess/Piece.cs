@@ -31,10 +31,10 @@ namespace FinalProject_Chess
                             bool_map[i,j]=false;
                         }
                     }
-            bool_map[row, col] = true;
+
             switch(piece_type){
                 case PieceType.Pawn:
-                    if(team == "white")
+                    if(team == "black")
                     {
                         if (row == 6)
                         {
@@ -49,7 +49,7 @@ namespace FinalProject_Chess
                         }
                         break;
                     }
-                    else if(team == "black")
+                    else if(team == "white")
                     {
                         if (row == 1)
                         {
