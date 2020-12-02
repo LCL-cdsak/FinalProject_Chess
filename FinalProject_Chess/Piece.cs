@@ -28,7 +28,7 @@ namespace FinalProject_Chess
                         }
                     }
             switch(piece_type){
-                case PieceType.wPawn:
+                case PieceType.wPawn://白方士兵
                     if (row == 6)
                     {
                         bool_map[row - 1, col] = true;
@@ -41,7 +41,7 @@ namespace FinalProject_Chess
                         if (now_map[row - 1, col + 1] != null) bool_map[row - 1, col + 1] = true;
                     }
                     break;
-                case PieceType.bPawn:
+                case PieceType.bPawn://黑方士兵
                     if (row == 1)
                     {
                         bool_map[row + 1, col] = true;
