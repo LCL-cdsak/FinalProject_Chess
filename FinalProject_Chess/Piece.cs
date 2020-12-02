@@ -36,43 +36,92 @@ namespace FinalProject_Chess
                 case PieceType.Pawn:
                     if(team == "black")
                     {
-                        if (row == 6)
+                        if (row + 1 <8)
                         {
-                            bool_map[row - 1, col] = true;
-                            bool_map[row - 2, col] = true;
+                            if (now_map[row + 1, col] == null)
+                            {
+                                bool_map[row + 1, col] = true;
+                            }
+                            if (col + 1 < 8)
+                            {
+                                if (now_map[row + 1, col + 1] != null)
+                                {
+                                    if (now_map[row + 1, col + 1].team == "white") bool_map[row + 1, col + 1] = true;
+                                }
+                            }
+                            if (col - 1 > 0)
+                            {
+                                if (now_map[row + 1, col - 1] != null)
+                                {
+                                    if (now_map[row + 1, col - 1].team == "white") bool_map[row + 1, col - 1] = true;
+                                }
+                            }
                         }
-                        else
+                        if (row == 1 && now_map[row + 2, col] == null)
                         {
-                            bool_map[row - 1, col] = true;
-                            if (now_map[row - 1, col - 1] != null) bool_map[row - 1, col - 1] = true;
-                            if (now_map[row - 1, col + 1] != null) bool_map[row - 1, col + 1] = true;
+                            bool_map[row + 2, col] = true;
                         }
                         break;
                     }
                     else if(team == "white")
                     {
-                        if (row == 1)
+                        if (row - 1 > 0)
                         {
-                            bool_map[row + 1, col] = true;
-                            bool_map[row + 2, col] = true;
+                            if (now_map[row - 1, col] == null)
+                            {
+                                bool_map[row - 1, col] = true;
+                            }
+                            if (col + 1 < 8)
+                            {
+                                if (now_map[row - 1, col + 1] != null)
+                                {
+                                    if (now_map[row - 1, col + 1].team == "black") bool_map[row - 1, col + 1] = true;
+                                }
+                            }
+                            if (col - 1 > 0)
+                            {
+                                if (now_map[row - 1, col - 1] != null)
+                                {
+                                    if (now_map[row - 1, col - 1].team == "black") bool_map[row - 1, col - 1] = true;
+                                }
+                            }
                         }
-                        else
+                        if (row == 1&&now_map[row-2,col]==null)
                         {
-                            bool_map[row + 1, col] = true;
-                            if (now_map[row + 1, col - 1] != null) bool_map[row + 1, col - 1] = true;
-                            if (now_map[row + 1, col + 1] != null) bool_map[row + 1, col + 1] = true;
+                            bool_map[row - 2, col] = true;
                         }
                         break;
                     }
                     break;
 
                 case PieceType.King:
-                    for(int i = -1; i < 2; i++)
+                    if (team == "black")
                     {
-                        for(int j = -1; j < 2; j++)
+                        for (int i = -1; i < 2; i++)
                         {
-                            if (row + i < 0 || row + i >= 8 || col + i < 0 || col + i >= 8 || (j == 0 && i == 0)) break;
-                            else bool_map[row + i, col + j] = true;
+                            for (int j = -1; j < 2; j++)
+                            {
+                                if (row + i < 0 || row + i >= 8 || col + i < 0 || col + i >= 8 || (j == 0 && i == 0)|| now_map[row + i, col + j].team == "black") { break; }
+                                else
+                                { 
+                                    bool_map[row + i, col + j] = true;
+                                }
+                            }
+                        }
+                    }
+                    else if (team == "white")
+                    {
+                        for (int i = -1; i < 2; i++)
+                        {
+                            for (int j = -1; j < 2; j++)
+                            {
+                                if (row + i < 0 || row + i >= 8 || col + i < 0 || col + i >= 8 || (j == 0 && i == 0)) { break; }
+                                else
+                                {
+                                    if (now_map[row + i, col + j].team == "while") break;
+                                    else bool_map[row + i, col + j] = true;
+                                }
+                            }
                         }
                     }
                     break;
@@ -89,16 +138,142 @@ namespace FinalProject_Chess
                 case PieceType.Rook:
                     Cross_path(row, col, now_map, bool_map);
                     break;
-
+                    
                 case PieceType.Knight:
-                    if (row - 2 >= 0 && col - 1 >= 0)bool_map[row - 2, col - 1] = true;
-                    if (row - 1 >= 0 && col - 2 >= 0) bool_map[row - 1, col - 2] = true;
-                    if (row + 1 < 8 && col - 2 >=0) bool_map[row + 1, col - 2] = true;
-                    if (row + 2 < 8 && col - 1 >=0) bool_map[row + 2, col - 1] = true;
-                    if (row + 2 < 8 && col + 1<8) bool_map[row + 2, col + 1] = true;
-                    if (row + 1 < 8 && col + 2 < 8) bool_map[row + 1, col + 2] = true;
-                    if (row - 1 >= 0 && col + 2 < 8) bool_map[row - 1, col + 2] = true;
-                    if (row - 2 >= 0 && col + 1 < 8) bool_map[row - 2, col + 1] = true;
+                    if (team == "white")
+                    {
+                        if (row - 2 >= 0 && col - 1 >= 0)
+                        {
+                            if(now_map[row - 2, col - 1]==null)bool_map[row - 2, col - 1] = true;
+                            else
+                            {
+                                if(now_map[row - 2, col - 1].team!="white") bool_map[row - 2, col - 1] = true; ;
+                            }
+                        }
+                        if (row - 1 >= 0 && col - 2 >= 0)
+                        {
+                            if(now_map[row - 1, col - 2]==null)bool_map[row - 1, col - 2] = true;
+                            else
+                            {
+                                if(now_map[row - 1, col - 2].team!="white") bool_map[row - 1, col - 2] = true; ;
+                            }
+                        }
+                        if (row + 1 < 8 && col - 2 >= 0)
+                        {
+                            if(now_map[row + 1, col - 2]==null)bool_map[row + 1, col - 2] = true;
+                            else
+                            {
+                                if(now_map[row + 1, col - 2].team!="white") bool_map[row + 1, col - 2] = true;
+                            }
+                        }
+                        if (row + 2 < 8 && col - 1 >= 0)
+                        {
+                           if(now_map[row + 2, col - 1]==null)bool_map[row + 2, col - 1] = true;
+                           else
+                            {
+                                if(now_map[row + 2, col - 1].team!="white") bool_map[row + 2, col - 1] = true;
+                            }
+                        }
+                        if (row + 2 < 8 && col + 1 < 8)
+                        {
+                           if(now_map[row + 2, col + 1]==null)bool_map[row + 2, col + 1] = true;
+                            else
+                            {
+                                if(now_map[row + 2, col + 1].team!="white") bool_map[row + 2, col + 1] = true;
+                            }
+                        }
+                        if (row + 1 < 8 && col + 2 < 8)
+                        {
+                            if(now_map[row + 1, col + 2]==null)bool_map[row + 1, col + 2] = true;
+                            else
+                            {
+                                if(now_map[row + 1, col + 2].team!="white") bool_map[row + 1, col + 2] = true;
+                            }
+                        }
+                        if (row - 1 >= 0 && col + 2 < 8)
+                        {
+                           if(now_map[row - 1, col + 2]==null)bool_map[row - 1, col + 2] = true;
+                           else
+                            {
+                                if(now_map[row - 1, col + 2].team!="white") bool_map[row - 1, col + 2] = true;
+                            }
+                        }
+                        if (row - 2 >= 0 && col + 1 < 8)
+                        {
+                            if(now_map[row - 2, col + 1]==null)bool_map[row - 2, col + 1] = true;
+                            else
+                            {
+                                if(now_map[row - 2, col + 1].team!="white") bool_map[row - 2, col + 1] = true;
+                            }
+                        }
+                    }
+                    else if (team == "black")
+                    {
+                        if (row - 2 >= 0 && col - 1 >= 0)
+                        {
+                            if (now_map[row - 2, col - 1] == null) bool_map[row - 2, col - 1] = true;
+                            else
+                            {
+                                if (now_map[row - 2, col - 1].team != "black") bool_map[row - 2, col - 1] = true; ;
+                            }
+                        }
+                        if (row - 1 >= 0 && col - 2 >= 0)
+                        {
+                            if (now_map[row - 1, col - 2] == null) bool_map[row - 1, col - 2] = true;
+                            else
+                            {
+                                if (now_map[row - 1, col - 2].team != "black") bool_map[row - 1, col - 2] = true; ;
+                            }
+                        }
+                        if (row + 1 < 8 && col - 2 >= 0)
+                        {
+                            if (now_map[row + 1, col - 2] == null) bool_map[row + 1, col - 2] = true;
+                            else
+                            {
+                                if (now_map[row + 1, col - 2].team != "black") bool_map[row + 1, col - 2] = true;
+                            }
+                        }
+                        if (row + 2 < 8 && col - 1 >= 0)
+                        {
+                            if (now_map[row + 2, col - 1] == null) bool_map[row + 2, col - 1] = true;
+                            else
+                            {
+                                if (now_map[row + 2, col - 1].team != "black") bool_map[row + 2, col - 1] = true;
+                            }
+                        }
+                        if (row + 2 < 8 && col + 1 < 8)
+                        {
+                            if (now_map[row + 2, col + 1] == null) bool_map[row + 2, col + 1] = true;
+                            else
+                            {
+                                if (now_map[row + 2, col + 1].team != "black") bool_map[row + 2, col + 1] = true;
+                            }
+                        }
+                        if (row + 1 < 8 && col + 2 < 8)
+                        {
+                            if (now_map[row + 1, col + 2] == null) bool_map[row + 1, col + 2] = true;
+                            else
+                            {
+                                if (now_map[row + 1, col + 2].team != "black") bool_map[row + 1, col + 2] = true;
+                            }
+                        }
+                        if (row - 1 >= 0 && col + 2 < 8)
+                        {
+                            if (now_map[row - 1, col + 2] == null) bool_map[row - 1, col + 2] = true;
+                            else
+                            {
+                                if (now_map[row - 1, col + 2].team != "black") bool_map[row - 1, col + 2] = true;
+                            }
+                        }
+                        if (row - 2 >= 0 && col + 1 < 8)
+                        {
+                            if (now_map[row - 2, col + 1] == null) bool_map[row - 2, col + 1] = true;
+                            else
+                            {
+                                if (now_map[row - 2, col + 1].team != "black ") bool_map[row - 2, col + 1] = true;
+                            }
+                        }
+                    }
                     break;
             }
             return bool_map;
@@ -270,11 +445,11 @@ namespace FinalProject_Chess
         {
             if (char.IsUpper(c))
             {
-                return new Piece("black", Enum.GetName(typeof(PieceType), char.ToUpper(c)));
+                return new Piece("white", Enum.GetName(typeof(PieceType), char.ToUpper(c)));
             }
             else
             {
-                return new Piece("white", Enum.GetName(typeof(PieceType), char.ToUpper(c)));
+                return new Piece("black", Enum.GetName(typeof(PieceType), char.ToUpper(c)));
             }
             
         }
