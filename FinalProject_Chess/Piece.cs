@@ -86,7 +86,7 @@ namespace FinalProject_Chess
                                 }
                             }
                         }
-                        if (row == 1&&now_map[row-2,col]==null)
+                        if (row ==6 &&now_map[row-2,col]==null)
                         {
                             bool_map[row - 2, col] = true;
                         }
