@@ -28,6 +28,8 @@ namespace FinalProject_Chess
         public bool is_selected_piece = false; // true when player has seleted a piece
         public int[] selected_piece_location = new int[2]; // row, col (not x, y)
 
+        public List<int[,]> king_check_bool_maps = new List<int[,]>(); // store every thread path to the king.
+
         public Chess()
         {
             map = CreateChessMapFromChar(init_map);
