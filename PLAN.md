@@ -15,8 +15,8 @@ chess中使用bool valid_left_castling, valid_right_castling用來記錄king roo
 
 新增dictionary
 * Dictionary<Piece, bool[8,8]> protect_king_pieces 儲存保王棋與敵方威脅路徑bool map。  
-//* Dictionary<Piece, bool[8,8]> check_king_pieces 儲存非長直線威脅國王之piece極其威脅路徑(Pawn, Knight, King)。
-//* Dictionary<Piece, bool[8,8]> path_check_king_pieces 儲存長直線威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。
+//* Dictionary<Piece, bool[8,8]> check_king_pieces 儲存非長直線威脅國王之piece極其威脅路徑(Pawn, Knight, King)。  
+//* Dictionary<Piece, bool[8,8]> path_check_king_pieces 儲存長直線威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。  
 因為一回合內最多只有一個敵方棋能夠直接威脅國王，所以改用單變數儲存，也因AND運算方式，不須判別是否為長直線。 
 
 新增bool map
@@ -45,11 +45,11 @@ chess中使用bool valid_left_castling, valid_right_castling用來記錄king roo
 
 
 # King Check
-//國王被直接威脅時
-//1. 威脅棋不在九宮格內
-//   1. 長直線 - 確認是否有非保王棋可以擋。
-//   2. 非直線 - 利用all_team_path與國王valid_path做檢查(國王 & !(all_team_path))。
-//2. 威脅棋在九宮格內 - 直接用all_team_path, 國王valid_path做檢查(由於valid path不包含威脅棋本身，所以不影響王若可吃該棋的判斷)。
+//國王被直接威脅時  
+//1. 威脅棋不在九宮格內  
+//   1. 長直線 - 確認是否有非保王棋可以擋。  
+//   2. 非直線 - 利用all_team_path與國王valid_path做檢查(國王 & !(all_team_path))。  
+//2. 威脅棋在九宮格內 - 直接用all_team_path, 國王valid_path做檢查(由於valid path不包含威脅棋本身，所以不影響王若可吃該棋的判斷)。  
 
 國王走位計算  
 利用AND敵方all_team_path計算，得到之結果則為可走路徑，若沒有任何，設king_cant_move為true。  
