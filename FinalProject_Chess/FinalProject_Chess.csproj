@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chess.cs" />
+    <Compile Include="ChessAlgorithm.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
