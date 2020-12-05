@@ -81,7 +81,7 @@ namespace FinalProject_Chess
                                                             current[c, d] = current[a, b];
                                                             current[a, b] = null;
                                                             //**********************************************
-                                                            int highest_score = minmax(current, point + temp_score - temp_score_2, layer - 1);
+                                                            int highest_score = minmax(ref current, point + temp_score - temp_score_2, layer - 1);
                                                             point = highest_score > point ? highest_score : point;
                                                             //*******recover map to initial status**********
                                                             current[a, b] = current[c, d];

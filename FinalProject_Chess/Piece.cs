@@ -10,6 +10,8 @@ namespace FinalProject_Chess
     {
         public PieceType piece_type;
         public string team;
+        public bool[,] valid_path = new bool[8, 8];
+
         public Piece(string _team, string piece_type_name)
         {
             if (!Enum.TryParse(piece_type_name, true, out piece_type))
@@ -204,7 +206,7 @@ namespace FinalProject_Chess
         }
         private void Cross_path(int row,int col,Piece[,] now_map, bool[,] bool_map)//判斷十字路徑
         {
-   
+                // only consider the valid path for this piece (no king detection)
                 for (int i = 1; i < 8; i++)
                 {
                     if (col + i < 8)
@@ -407,6 +409,73 @@ namespace FinalProject_Chess
          * 
          * N:空格
          */
+        public bool[,] Thread_Cross_path(int row, int col, Piece[,] now_map, out bool is_check)
+        {
+            // Calculate and return "thread path"
+            is_check = false; // if the king get "direct" check.
+            bool[,] thread_map = null;
+            bool is_crossed;
+            int[,] vectors = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+            int irow, icol;
+            for(int i=0; i<4; ++i)
+            {
+                irow = row;
+                icol = col;
+                is_crossed = false;
+                for(int k=0; k<7; ++k)
+                {
+                    if(0<=irow && irow < 8 && 0<=icol && icol<8)
+                    {
+                        if (now_map[irow, icol] != null)
+                        {
+                            if (now_map[irow, icol].team == team)
+                            {
+                                break;
+                            }
+
+                            if (is_crossed)
+                            {
+                                if(now_map[irow, icol].piece_type == PieceType.King)
+                                {
+                                    // is_check remain false, just assign thread_map
+                                    thread_map = BackTrackThreadMap(k, vectors[i, 0], vectors[i, 1], irow, icol);
+                                }
+                            }
+                            else
+                            {
+                                if(now_map[irow, icol].piece_type == PieceType.King)
+                                {
+                                    // direct check king.
+                                    is_check = true;
+                                    // backtrack to form thread path
+                                    thread_map = BackTrackThreadMap(k, vectors[i, 0], vectors[i, 1], irow, icol);
+
+                                    return thread_map;
+                                }
+                                else
+                                {
+                                    is_crossed = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                    
+                
+            }
+            return null;
+        }
+        public bool[,] BackTrackThreadMap(int k, int r_vec, int c_vec, int irow, int icol)
+        {
+            bool[,] thread_map = new bool[8, 8];
+            for(;k>=0; --k)
+            {
+                irow -= r_vec;
+                icol -= c_vec;
+                thread_map[irow, icol] = true;
+            }
+            return thread_map;
+        }
         public static PieceType PieceTypeFromString(string str)
         {
             return (PieceType)Enum.Parse(typeof(PieceType), str, true);

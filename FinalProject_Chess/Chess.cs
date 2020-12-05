@@ -28,14 +28,40 @@ namespace FinalProject_Chess
         public bool is_selected_piece = false; // true when player has seleted a piece
         public int[] selected_piece_location = new int[2]; // row, col (not x, y)
 
-        public List<int[,]> king_check_bool_maps = new List<int[,]>(); // store every thread path to the king.
+        public Dictionary<string, bool[]> team_castling = new Dictionary<string, bool[]>();
 
+        public Dictionary<string, bool[,]> all_team_path = new Dictionary<string, bool[,]>();
+
+        Dictionary<Piece, bool[,]> check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"非長直線"_"直接"_威脅國王之piece極其威脅路徑(Pawn, Knight, King)。
+        Dictionary<Piece, bool[,]> path_check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"長直線"_"直接"_威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。
+        Dictionary<Piece, bool[,]> protect_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存保王棋與敵方威脅路徑bool map(用作判定保王棋走位)。
         public Chess()
         {
             map = CreateChessMapFromChar(init_map);
             // Game Init
+            InitChessGame();
+            
+        }
+
+        public void InitChessGame()
+        {
             current_team = "white";
             is_selected_piece = false;
+            string[] team_names = { "white", "black" };
+
+            foreach(string team_name in team_names)
+            {
+                team_castling[team_name] = new bool[2] { true, true};
+
+                all_team_path[team_name] = new bool[8, 8];
+
+                check_king_pieces.Clear();
+                path_check_king_pieces.Clear();
+                protect_king_pieces.Clear();
+            }
+            
+
+
         }
 
         Piece[,] CreateChessMapFromChar(char[,] char_table)
@@ -118,3 +144,5 @@ namespace FinalProject_Chess
             map[selected_piece_location[0], selected_piece_location[1]] = null;
             return true;
         }
+    }
+}
