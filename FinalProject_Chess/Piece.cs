@@ -10,13 +10,15 @@ namespace FinalProject_Chess
     {
         public PieceType piece_type;
         public string team;
-        bool can_protect_king;
         public bool[,] valid_path = new bool[8, 8];
         public bool[,] protect_path = null;
 
         public static readonly int[,] king_offsets = { { -1,-1}, {-1,0 }, { -1,1},
                                          { 0,-1}, {0, 1},
                                          { 1,-1}, {1, 0}, {1,1} };
+
+        public static readonly int[,] cross_vectors = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+        public static readonly int[,] diagonal_vectors = new int[,] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
 
         public Piece(string _team, string piece_type_name)
         {
@@ -33,7 +35,7 @@ namespace FinalProject_Chess
         public void RoundInitialize()
         {
             protect_path = null;
-            can_protect_king = false;
+
         }
 
 
@@ -428,6 +430,7 @@ namespace FinalProject_Chess
             Piece protect_piece = null;
             int[,] offsets = null;
             bool[,] thread_path = null;
+            bool temp_is_check;
             switch (piece_type)
             {
                 case PieceType.Pawn:
@@ -437,53 +440,57 @@ namespace FinalProject_Chess
                         {
                             if (col - 1 >= 0)
                             {
-                                if(now_map[row-1, col-1].piece_type == PieceType.King)
-                                {
-                                    thread_path = new bool[8, 8];
-                                    thread_path[row, col] = true; // only self location is true
-                                    is_check = true;
-                                    check_path = thread_path;
-                                    return null;
-                                }
+                                if (now_map[row - 1, col - 1] != null)
+                                    if (now_map[row-1, col-1].piece_type == PieceType.King)
+                                    {
+                                        thread_path = new bool[8, 8];
+                                        thread_path[row, col] = true; // only self location is true
+                                        is_check = true;
+                                        check_path = thread_path;
+                                        return null;
+                                    }
                             }
                             if( col+1 < 8)
                             {
-                                if(now_map[row-1, col+1].piece_type == PieceType.King)
-                                {
-                                    thread_path = new bool[8, 8];
-                                    thread_path[row, col] = true;
-                                    is_check = true;
-                                    check_path = thread_path;
-                                    return null;
-                                }
+                                if (now_map[row - 1, col + 1] != null)
+                                    if (now_map[row-1, col+1].piece_type == PieceType.King)
+                                    {
+                                        thread_path = new bool[8, 8];
+                                        thread_path[row, col] = true;
+                                        is_check = true;
+                                        check_path = thread_path;
+                                        return null;
+                                    }
                             }
                         }
                     }
                     else
                     {
-                        if (row + 1 >= 0)
+                        if (row + 1 < 8)
                         {
                             if (col - 1 >= 0)
                             {
-                                if (now_map[row + 1, col - 1].piece_type == PieceType.King)
-                                {
-                                    thread_path = new bool[8, 8];
-                                    thread_path[row, col] = true;
-                                    is_check = true;
-                                    check_path = thread_path;
-                                    return null;
-                                }
+                                if (now_map[row + 1, col - 1] != null)
+                                    if (now_map[row + 1, col - 1].piece_type == PieceType.King)
+                                    {
+                                        thread_path = new bool[8, 8];
+                                        thread_path[row, col] = true;
+                                        is_check = true;
+                                        check_path = thread_path;
+                                        return null;
+                                    }
                             }
                             if (col + 1 < 8)
                             {
-                                if (now_map[row + 1, col + 1].piece_type == PieceType.King)
-                                {
-                                    thread_path = new bool[8, 8];
-                                    thread_path[row, col] = true;
-                                    is_check = true;
-                                    check_path = thread_path;
-                                    return null;
-                                }
+                                if(now_map[row+1, col+1] != null)
+                                    if (now_map[row + 1, col + 1].piece_type == PieceType.King)
+                                    {
+                                        thread_path = new bool[8, 8];
+                                        thread_path[row, col] = true;
+                                        is_check = true;
+                                        check_path = thread_path;
+                                        return null;
+                                    }
                             }
                         }
                     }
@@ -496,22 +503,28 @@ namespace FinalProject_Chess
                     return null;
                     //break;
                 case PieceType.Queen:
-                    thread_path = Thread_Cross_Diagonal_path(false, row, col, now_map, out is_check, out protect_piece);
+                    thread_path = Thread_Cross_Diagonal_path(false, row, col, now_map, out temp_is_check, out protect_piece);
                     if(thread_path != null)
                     {
-                        if (is_check)
+                        if (temp_is_check)
+                        {
+                            is_check = temp_is_check;
                             check_path = thread_path;
+                        }
                         else
-                            protect_path = thread_path;
+                            protect_piece.protect_path = thread_path;
                     }
 
-                    thread_path = Thread_Cross_Diagonal_path(true, row, col, now_map, out is_check, out protect_piece);
+                    thread_path = Thread_Cross_Diagonal_path(true, row, col, now_map, out temp_is_check, out protect_piece);
                     if (thread_path != null)
                     {
-                        if (is_check)
+                        if (temp_is_check)
+                        {
+                            is_check = temp_is_check;
                             check_path = thread_path;
+                        }
                         else
-                            protect_path = thread_path;
+                            protect_piece.protect_path = thread_path;
                     }
                     break;
                 case PieceType.Bishop:
@@ -521,7 +534,7 @@ namespace FinalProject_Chess
                         if (is_check)
                             check_path = thread_path;
                         else
-                            protect_path = thread_path;
+                            protect_piece.protect_path = thread_path;
                     }
                     break;
                 case PieceType.Rook:
@@ -531,7 +544,7 @@ namespace FinalProject_Chess
                         if (is_check)
                             check_path = thread_path;
                         else
-                            protect_path = thread_path;
+                            protect_piece.protect_path = thread_path;
                     }
                     break;
                 case PieceType.Knight:
@@ -542,14 +555,22 @@ namespace FinalProject_Chess
                     {
                         irow = row + offsets[i, 0];
                         icol = col + offsets[i, 1];
-                        if(now_map[irow, icol].piece_type == PieceType.King)
+                        if (irow >= 0 && irow < 8 && icol >= 0 && icol < 8)
                         {
-                            thread_path = new bool[8, 8];
-                            thread_path[row, col] = true;
-                            is_check = true;
-                            check_path = thread_path;
-                            return null;
+                            if(now_map[irow, icol] != null)
+                            {
+                                if (now_map[irow, icol].piece_type == PieceType.King)
+                                {
+                                    thread_path = new bool[8, 8];
+                                    thread_path[row, col] = true;
+                                    is_check = true;
+                                    check_path = thread_path;
+                                    return null;
+                                }
+                            }
+                            
                         }
+                        
                     }
                     break;
             }
@@ -567,11 +588,11 @@ namespace FinalProject_Chess
             int[,] vectors;
             if (is_diagonal)
             {
-                vectors = new int[,] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+                vectors = diagonal_vectors;
             }
             else
             {
-                vectors = new int[,] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+                vectors = cross_vectors;
             }
             
             int irow, icol;
@@ -661,7 +682,7 @@ namespace FinalProject_Chess
                     }
                     else
                     {
-                        if (row + 1 >= 0)
+                        if (row + 1 < 8)
                         {
                             if (col - 1 >= 0)
                             {
@@ -688,14 +709,14 @@ namespace FinalProject_Chess
                     }
                     break;
                 case PieceType.Queen:
-                    Team_Cross_Diagonal_path(false, row, col, all_team_path);
-                    Team_Cross_Diagonal_path(true, row, col, all_team_path);
+                    Team_Cross_Diagonal_path(false, row, col, now_map, all_team_path);
+                    Team_Cross_Diagonal_path(true, row, col, now_map, all_team_path);
                     break;
                 case PieceType.Bishop:
-                    Team_Cross_Diagonal_path(true, row, col, all_team_path);
+                    Team_Cross_Diagonal_path(true, row, col, now_map, all_team_path);
                     break;
                 case PieceType.Rook:
-                    Team_Cross_Diagonal_path(false, row, col, all_team_path);
+                    Team_Cross_Diagonal_path(false, row, col, now_map, all_team_path);
                     break;
                 case PieceType.Knight:
                     offsets = new int[,]{ {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
@@ -710,16 +731,16 @@ namespace FinalProject_Chess
                     break;
             }
         }
-        public void Team_Cross_Diagonal_path(bool is_diagonal, int row, int col, bool[,] all_team_path)
+        public void Team_Cross_Diagonal_path(bool is_diagonal, int row, int col, Piece[,] now_map, bool[,] all_team_path)
         {
             int[,] vectors;
             if (is_diagonal)
             {
-                vectors = new int[,] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+                vectors = diagonal_vectors;
             }
             else
             {
-                vectors = new int[,] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+                vectors = cross_vectors;
             }
 
             int irow, icol;
@@ -731,7 +752,13 @@ namespace FinalProject_Chess
                     icol = col + vectors[i, 1];
                     if (0 <= irow && irow < 8 && 0 <= icol && icol < 8)
                     {
-                        all_team_path[irow, icol] = true;
+                        if(now_map[irow, icol]==null)
+                            all_team_path[irow, icol] = true;
+                        else
+                        {
+                            if (now_map[irow, icol].team == team)
+                                all_team_path[irow, icol] = true;
+                        }
                     }
                 }
             }

@@ -91,6 +91,7 @@ namespace FinalProject_Chess
         {
 
         }
+
         private void initial()
         {
             for (int i = 0; i < 32; i++)

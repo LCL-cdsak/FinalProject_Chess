@@ -23,6 +23,7 @@ namespace FinalProject_Chess
             };
         public Piece[,] map = new Piece[8, 8];
         public Dictionary<string, int[]> king_piece_locations = new Dictionary<string, int[]>();
+        public Dictionary<string, Piece> king_pieces = new Dictionary<string, Piece>();
         public Piece protect_piece = null;
 
         // game status
@@ -32,7 +33,7 @@ namespace FinalProject_Chess
 
         public Dictionary<string, bool[]> team_castling = new Dictionary<string, bool[]>();
         public Dictionary<string, bool[,]> all_team_path = new Dictionary<string, bool[,]>();
-        public bool is_check, king_cant_move;
+        public bool is_check, king_cant_move, must_move_king, is_gameover = false;
         public bool[,] check_path = null; // store the king check path.
         public List<Piece> protect_pieces = new List<Piece>();
 
@@ -50,6 +51,7 @@ namespace FinalProject_Chess
 
         public void InitChessGame()
         {
+            is_gameover = false;
             current_team = "white";
             is_selected_piece = false;
             string[] team_names = { "white", "black" };
@@ -66,14 +68,13 @@ namespace FinalProject_Chess
                 //path_check_king_pieces.Clear();
                 //protect_king_pieces.Clear();
             }
-            
 
+            RoundInitialize();
 
         }
         public void RoundInitialize()
         {
-            is_check = false;
-            check_path = null;
+
 
             UpdateValidPath(); // main process
         }
@@ -95,6 +96,7 @@ namespace FinalProject_Chess
                         if(chess_map[row, col].piece_type == Piece.PieceType.King)
                         {
                             king_piece_locations[chess_map[row, col].team] = new int[2] { row, col };
+                            king_pieces[chess_map[row, col].team] = chess_map[row, col];
                         }
                     }
                 }
@@ -104,13 +106,22 @@ namespace FinalProject_Chess
         public bool[,] ValidPath(int row, int col)
         {
             // wrap the Piece.ValidPath, no need for arg "map")
-            return map[row, col].ValidPath(row, col, map);
+            //return map[row, col].ValidPath(row, col, map);
+            if (must_move_king)
+            {
+                if (map[row, col].piece_type != Piece.PieceType.King)
+                    return null;
+            }
+            return map[row, col].valid_path;
         }
         
         public void UpdateValidPath()
         {
+            is_check = false;
+            check_path = null;
+
             // Init Piece Round
-            for(int i=0; i<8; ++i)
+            for (int i=0; i<8; ++i)
             {
                 for(int k=0; k<8; ++k)
                 {
@@ -130,7 +141,7 @@ namespace FinalProject_Chess
                 {
                     if(map[row,col] != null)
                     {
-                        temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, ref check_path);
+                        temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, ref check_path);// if is_check, check_path will be set
                         if (temp_piece != null)
                         {
                             //protect_piece = temp_piece;
@@ -162,15 +173,16 @@ namespace FinalProject_Chess
             // Create all_team_path, and determine king.valid_path, king_cant_move
             all_team_path["white"] = new bool[8, 8];
             all_team_path["black"] = new bool[8, 8];
+            string enemy_team = (current_team == "white") ? "black" : "white";
             for(int row=0; row<8; ++row)
             {
                 for(int col=0; col<8; ++col)
                 {
                     if (map[row, col] != null)
                     {
-                        if(map[row, col].team == current_team)
+                        if(map[row, col].team == enemy_team)
                         {
-                            map[row, col].Team_path(row, col, map, all_team_path[map[row, col].team]);
+                            map[row, col].Team_path(row, col, map, all_team_path[enemy_team]);
                         }
                     }
                 }
@@ -183,6 +195,7 @@ namespace FinalProject_Chess
             bool is_candidate_exists = false, temp_bool;
             if (is_check)
             {
+                MessageBox.Show("Check");
                 for(int row=0; row<8; ++row)
                 {
                     for(int col=0; col<8; ++col)
@@ -200,9 +213,32 @@ namespace FinalProject_Chess
                 }
             }
 
-            king_cant_move = AndChessKingBoolMap()
+            king_cant_move = AndChessKingBoolMap(king_piece_locations[current_team][0], king_piece_locations[current_team][1],
+                                                 king_pieces[current_team].valid_path, all_team_path[(current_team=="white")?"black":"white"]);
 
             // Determine gameover-condition(king_cant_move & no candidate to protect king)
+            must_move_king = false;
+            if (is_check)
+            {
+                if (is_candidate_exists)
+                {
+                    // just use the valid_path result.
+                }
+                else
+                {
+                    // king must move
+                    if (king_cant_move)
+                    {
+                        // game over
+                        is_gameover = true;
+                    }
+                    else
+                    {
+                        // must move king, ValidPath need to use 
+                        must_move_king = true;
+                    }
+                }
+            }
 
         }
         public bool IsDeselect(int row, int col)
@@ -250,15 +286,25 @@ namespace FinalProject_Chess
                 // no piece selected
                 return false;
             }
+            if(ValidPath(selected_piece_location[0], selected_piece_location[1]) == null)
+            {
+                MessageBox.Show("King Check", "NO", MessageBoxButtons.OK);
+                // not a valid path
+                return false;
+            }
             if (!ValidPath(selected_piece_location[0], selected_piece_location[1])[row, col])
             {
                 MessageBox.Show("NO", "NO", MessageBoxButtons.OK);
                 // not a valid path
                 return false;
             }
+            // valid path
             is_selected_piece = false;
             map[row, col] = map[selected_piece_location[0], selected_piece_location[1]];
             map[selected_piece_location[0], selected_piece_location[1]] = null;
+
+            current_team = (current_team == "white") ? "black" : "white";
+            RoundInitialize();
             return true;
         }
         public static bool AndChessBoolMap(bool[,] a, bool[,] b)
