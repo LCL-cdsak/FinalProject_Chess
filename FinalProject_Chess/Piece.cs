@@ -573,11 +573,11 @@ namespace FinalProject_Chess
             int irow, icol;
             for(int i=0; i<4; ++i)
             {
-                irow = row;
-                icol = col;
                 is_crossed = false;
                 for(int k=0; k<7; ++k)
                 {
+                    irow = row + vectors[i, 0];
+                    icol = col + vectors[i, 1];
                     if(0<=irow && irow < 8 && 0<=icol && icol<8)
                     {
                         if (now_map[irow, icol] != null)
@@ -633,6 +633,102 @@ namespace FinalProject_Chess
                 thread_map[irow, icol] = true;
             }
             return thread_map;
+        }
+        public void Team_path(bool[,] all_team_path, int row, int col, Piece[,] now_map)
+        {
+            int[,] offsets = null;
+            int irow, icol;
+            switch (piece_type)
+            {
+                case PieceType.Pawn:
+                    if (team == "white")
+                    {
+                        if (row - 1 >= 0)
+                        {
+                            if (col - 1 >= 0)
+                            {
+                                all_team_path[row - 1, col - 1] = true;
+                            }
+                            if (col + 1 < 8)
+                            {
+                                all_team_path[row - 1, col + 1] = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (row + 1 >= 0)
+                        {
+                            if (col - 1 >= 0)
+                            {
+                                all_team_path[row + 1, col - 1] = true;
+                            }
+                            if (col + 1 < 8)
+                            {
+                                all_team_path[row + 1, col + 1] = true;
+                            }
+                        }
+                    }
+                    break;
+                case PieceType.King:
+                    offsets = new int[,] { { -1,-1}, {-1,0 }, { -1,1},
+                                       { 0,-1}, {0, 1},
+                                       { 1,-1}, {1, 0}, {1,1} };
+                    
+                    for(int i=0; i<8; ++i)
+                    {
+                        irow = row + offsets[i, 0];
+                        icol = col + offsets[i, 1];
+                        all_team_path[irow, icol] = true;
+                    }
+                    break;
+                case PieceType.Queen:
+                    Team_Cross_Diagonal_path(false, row, col, all_team_path);
+                    Team_Cross_Diagonal_path(true, row, col, all_team_path);
+                    break;
+                case PieceType.Bishop:
+                    Team_Cross_Diagonal_path(true, row, col, all_team_path);
+                    break;
+                case PieceType.Rook:
+                    Team_Cross_Diagonal_path(false, row, col, all_team_path);
+                    break;
+                case PieceType.Knight:
+                    offsets = new int[,]{ {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
+                                          {1, -2}, {1, 2}, {2, -1}, {2, 1}};
+                    for (int i = 0; i < 8; ++i)
+                    {
+                        irow = row + offsets[i, 0];
+                        icol = col + offsets[i, 1];
+                        all_team_path[irow, icol] = true;
+                    }
+                    break;
+            }
+        }
+        public void Team_Cross_Diagonal_path(bool is_diagonal, int row, int col, bool[,] all_team_path)
+        {
+            int[,] vectors;
+            if (is_diagonal)
+            {
+                vectors = new int[,] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+            }
+            else
+            {
+                vectors = new int[,] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+            }
+
+            int irow, icol;
+            for (int i = 0; i < 4; ++i)
+            {
+                for (int k = 0; k < 7; ++k)
+                {
+                    irow = row + vectors[i, 0];
+                    icol = col + vectors[i, 1];
+                    if (0 <= irow && irow < 8 && 0 <= icol && icol < 8)
+                    {
+                        all_team_path[irow, icol] = true;
+                    }
+                }
+            }
         }
         public static PieceType PieceTypeFromString(string str)
         {

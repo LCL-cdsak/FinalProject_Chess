@@ -23,6 +23,7 @@ namespace FinalProject_Chess
             };
         public Piece[,] map = new Piece[8, 8];
         public Piece wking = null, bking = null; // for fast access
+        public Piece protect_piece = null;
 
         // game status
         private string current_team = null;
@@ -126,15 +127,43 @@ namespace FinalProject_Chess
                     }
                 }
             }
+            protect_piece = null;
+            Piece temp_piece;
             // Create thread_paths, and add to the protecting_piece, set is_check
-            for(int i=0; i<8; ++i)
+            for (int row = 0; row < 8; ++row)
             {
-                
+                for(int col=0; col<8; ++col)
+                {
+                    if(map[row,col] != null)
+                    {
+                        temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, ref check_path);
+                        if (temp_piece != null)
+                        {
+                            protect_piece = temp_piece;
+                        }
+                    }
+                    
+                }
             }
 
             // Create valid_path, and do AND with protect_path
+            for(int row=0; row<8; ++row)
+            {
+                for(int col=0; col<8; ++col)
+                {
+                    if (map[row, col] != null)
+                    {
+                        map[row, col].valid_path = map[row, col].ValidPath(row, col, map);
+                    }
+                }
+            }
+            if(protect_piece != null)
+            {
+                AndChessBoolMap(protect_piece.valid_path, protect_piece.protect_path);
+            }
 
             // Create all_team_path, and determine king.valid_path, king_cant_move
+
 
             // Now, the valid path for all piece is complete
 
@@ -199,6 +228,16 @@ namespace FinalProject_Chess
             map[row, col] = map[selected_piece_location[0], selected_piece_location[1]];
             map[selected_piece_location[0], selected_piece_location[1]] = null;
             return true;
+        }
+        public static void AndChessBoolMap(bool[,] a, bool[,] b)
+        {
+            for(int row=0; row<8; ++row)
+            {
+                for(int col=0; col<8; ++col)
+                {
+                    a[row, col] &= b[row, col];
+                }
+            }
         }
     }
 }
