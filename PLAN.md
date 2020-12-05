@@ -4,7 +4,7 @@
 * 威脅路徑 - 從自身到王前一格，**並且自身位置=true**之bool map。
 * thread - 在中間一敵方棋移開後，可直接攻擊國王(只有米字相關移動會有)。
 * check - 可直接攻擊國王。
-* all_team_path - 為普通吃棋bool map之集合(OR運算), 給敵對國王判定用, 但友方位置為true(原本ValidPath遇到友方為false)。
+* all_team_path - 為普通吃棋bool map之集合(OR運算), 但友方位置為true(原本ValidPath遇到友方為false), 自身位置為false, 給敵對國王判定用。  
 
 
 # Chess
@@ -18,25 +18,28 @@ chess中使用bool valid_left_castling, valid_right_castling用來記錄king roo
 * Dictionary<Piece, bool[8,8]> protect_king_pieces 儲存保王棋與敵方威脅路徑bool map。  
 ~~//* Dictionary<Piece, bool[8,8]> check_king_pieces 儲存非長直線威脅國王之piece極其威脅路徑(Pawn, Knight, King)。 ~~
 ~~//* Dictionary<Piece, bool[8,8]> path_check_king_pieces 儲存長直線威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。~~  
-因為一回合內最多只有一個敵方棋能夠直接威脅國王，所以改用單變數儲存，也因AND運算方式，不須判別是否為長直線。 
+因為一回合內最多只有一個敵方棋能夠直接威脅國王，所以改用單變數儲存，也因AND運算方式，不須判別是否為長直線。  
 
 新增bool map
 * Dictionary<string, bool[8,8]> all_team_path - 為全部同team之OR運算結果(應在保王棋判斷完後再建立)。
 
-1. 首先計算全部piece [path_map], [thread_king_map]，  
-建立path_check_king_pieces, check_king_pieces.
-2. 將保國王piece.path_map 與所有 thread_king_map 做 **AND**。  
-3. 建立all_team_path。
-4. 將國王piece.path_map(詳細於King Check)。
+1. 首先計算全部piece [thread_king_map]，並且將結果存至該保王棋之protect_path。
+~~建立path_check_king_pieces, check_king_pieces.~~  
+2. 計算piece之ValidPath，存至piece.valid_path。  
+3. 將保國王piece.valid_path 與所有 thread_king_map(piece.protect_path) 做 **AND**。  
+4. 建立所有隊伍之all_team_path。 
+5. 將國王piece.valid_path(詳細於King Check)與敵方all_team_path做檢查[king.valid_path & !(all_team_path)]。
    * 若有威脅路徑無法被任何本team all_team_path阻擋，則需檢查國王是否能閃躲，若無法則敗。
-   * 若可，則玩家必須移動國王或是幫國王阻擋。
+   * 若可，則玩家必須幫國王阻擋。
 
 
 # Piece
 在Piece中新增"bool[8,8] valid_path"，會把結果存於此，chess中也直接對Piece.path_map做國王判定等操作。
-新增bool
-* protecting_king; 即為保王棋。
-* can_protect_king; 即為潛在可保王棋，在check時，只能移動此項為true之棋。
+新增bool  
+* bool protecting_king; 即為保王棋。  
+* bool can_protect_king; 即為潛在可保王棋，在check時，只能移動此項為true之棋。  
+新增bool[]  
+* protect_path - 由威脅棋計算，再添加到保王棋內。  
 
 含有兩種valid path function。  
 
