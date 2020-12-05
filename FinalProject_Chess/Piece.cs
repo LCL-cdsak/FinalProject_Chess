@@ -26,7 +26,7 @@ namespace FinalProject_Chess
             piece_type = _piece_type;
             team = _team;
         }
-        public void RoundInitialization()
+        public void RoundInitialize()
         {
             protect_path = null;
             can_protect_king = false;
@@ -417,12 +417,103 @@ namespace FinalProject_Chess
          * 
          * N:空格
          */
-        public bool[,] Thread_Cross_path(int row, int col, Piece[,] now_map, out bool is_check)
+        public Piece Thread_path(int row, int col, Piece[,] now_map, out bool is_check)
+        {
+            // This function will return the protect_piece
+            Piece protect_piece = null;
+            is_check = false;
+            int[,] offsets = null;
+            bool[,] thread_path = null;
+            switch (piece_type)
+            {
+                case PieceType.Pawn:
+                    if(team == "white")
+                    {
+                        if(row-1 >= 0)
+                        {
+                            if (col - 1 >= 0)
+                            {
+                                if(now_map[row-1, col-1].piece_type == PieceType.King)
+                                {
+                                    thread_path = new bool[8, 8];
+                                    thread_path[row, col] = true; // only self location is true
+                                }
+                            }
+                            if( col+1 < 8)
+                            {
+                                if(now_map[row-1, col+1].piece_type == PieceType.King)
+                                {
+                                    thread_path = new bool[8, 8];
+                                    thread_path[row, col] = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (row + 1 >= 0)
+                        {
+                            if (col - 1 >= 0)
+                            {
+                                if (now_map[row + 1, col - 1].piece_type == PieceType.King)
+                                {
+                                    thread_path = new bool[8, 8];
+                                    thread_path[row, col] = true; // only self location is true
+                                }
+                            }
+                            if (col + 1 < 8)
+                            {
+                                if (now_map[row + 1, col + 1].piece_type == PieceType.King)
+                                {
+                                    thread_path = new bool[8, 8];
+                                    thread_path[row, col] = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case PieceType.King:
+                    /*offsets = new int[,] { { -1,-1}, {-1,0 }, { -1,1},
+                                       { 0,-1}, {0, 1},
+                                       { 1,-1}, {1, 0}, {1,1} };*/
+                    return null;
+                    break;
+                case PieceType.Queen:
+                    Thread_Cross_Diagonal_path(false, row, col, now_map, out is_check, out protect_piece);
+                    Thread_Cross_Diagonal_path(true, row, col, now_map, out is_check, out protect_piece);
+                    break;
+                case PieceType.Bishop:
+                    Thread_Cross_Diagonal_path(true, row, col, now_map, out is_check, out protect_piece);
+                    break;
+                case PieceType.Rook:
+                    Thread_Cross_Diagonal_path(false, row, col, now_map, out is_check, out protect_piece);
+                    break;
+                case PieceType.Knight:
+                    offsets = new int[,]{ {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
+                                          {1, -2}, {1, 2}, {2, -1}, {2, 1}};
+                    break;
+            }
+
+            return protect_piece;
+        }
+        public bool[,] Thread_Cross_Diagonal_path(bool is_diagonal, int row, int col, Piece[,] now_map, out bool is_check, out Piece protect_piece)
         {
             // Calculate and return "thread path"
+            // if is_diagonal is false, do cross_path
             is_check = false; // if the king get "direct" check.
+            protect_piece = null;
+
             bool is_crossed;
-            int[,] vectors = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+            int[,] vectors;
+            if (is_diagonal)
+            {
+                vectors = new int[,] { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+            }
+            else
+            {
+                vectors = new int[,] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+            }
+            
             int irow, icol;
             for(int i=0; i<4; ++i)
             {

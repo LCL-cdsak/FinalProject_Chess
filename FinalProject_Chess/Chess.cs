@@ -91,9 +91,18 @@ namespace FinalProject_Chess
         public void UpdateValidPath()
         {
             // Init Piece Round
-            
-
+            for(int i=0; i<8; ++i)
+            {
+                for(int k=0; k<8; ++k)
+                {
+                    if(map[i, k] != null)
+                    {
+                        map[i, k].RoundInitialize();
+                    }
+                }
+            }
             // Create thread_paths, and add to the protecting_piece, set is_check
+
 
             // Create valid_path, and do AND with protect_path
 
