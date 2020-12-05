@@ -29,12 +29,12 @@ namespace FinalProject_Chess
         public int[] selected_piece_location = new int[2]; // row, col (not x, y)
 
         public Dictionary<string, bool[]> team_castling = new Dictionary<string, bool[]>();
-
         public Dictionary<string, bool[,]> all_team_path = new Dictionary<string, bool[,]>();
 
-        Dictionary<Piece, bool[,]> check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"非長直線"_"直接"_威脅國王之piece極其威脅路徑(Pawn, Knight, King)。
-        Dictionary<Piece, bool[,]> path_check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"長直線"_"直接"_威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。
-        Dictionary<Piece, bool[,]> protect_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存保王棋與敵方威脅路徑bool map(用作判定保王棋走位)。
+        //Dictionary<Piece, bool[,]> check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"非長直線"_"直接"_威脅國王之piece極其威脅路徑(Pawn, Knight, King)。
+        //Dictionary<Piece, bool[,]> path_check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"長直線"_"直接"_威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。
+        //Dictionary<Piece, bool[,]> protect_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存保王棋與敵方威脅路徑bool map(用作判定保王棋走位)。
+
         public Chess()
         {
             map = CreateChessMapFromChar(init_map);
@@ -55,9 +55,9 @@ namespace FinalProject_Chess
 
                 all_team_path[team_name] = new bool[8, 8];
 
-                check_king_pieces.Clear();
-                path_check_king_pieces.Clear();
-                protect_king_pieces.Clear();
+                //check_king_pieces.Clear();
+                //path_check_king_pieces.Clear();
+                //protect_king_pieces.Clear();
             }
             
 
@@ -87,6 +87,25 @@ namespace FinalProject_Chess
         {
             // wrap the Piece.ValidPath, no need for arg "map")
             return map[row, col].ValidPath(row, col, map);
+        }
+        public void UpdateValidPath()
+        {
+            // Init Piece Round
+            
+
+            // Create thread_paths, and add to the protecting_piece, set is_check
+
+            // Create valid_path, and do AND with protect_path
+
+            // Create all_team_path, and determine king.valid_path, king_cant_move
+
+            // Now, the valid path for all piece is complete
+
+            // If is_check is true, find all candidate to  protect king, 
+            // Do AND to all threaded team with the thread_path (Thus, the piece which is not candidate will have a full false valid_path)
+
+            // Determine gameover-condition(king_cant_move & no candidate to protect king)
+
         }
         public bool IsDeselect(int row, int col)
         {

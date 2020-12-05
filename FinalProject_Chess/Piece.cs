@@ -10,7 +10,9 @@ namespace FinalProject_Chess
     {
         public PieceType piece_type;
         public string team;
+        bool can_protect_king;
         public bool[,] valid_path = new bool[8, 8];
+        public bool[,] protect_path = null;
 
         public Piece(string _team, string piece_type_name)
         {
@@ -24,6 +26,12 @@ namespace FinalProject_Chess
             piece_type = _piece_type;
             team = _team;
         }
+        public void RoundInitialization()
+        {
+            protect_path = null;
+            can_protect_king = false;
+        }
+
 
         public bool[,] ValidPath(int row, int col,Piece[,] now_map)
         {
@@ -413,7 +421,6 @@ namespace FinalProject_Chess
         {
             // Calculate and return "thread path"
             is_check = false; // if the king get "direct" check.
-            bool[,] thread_map = null;
             bool is_crossed;
             int[,] vectors = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
             int irow, icol;
@@ -438,7 +445,13 @@ namespace FinalProject_Chess
                                 if(now_map[irow, icol].piece_type == PieceType.King)
                                 {
                                     // is_check remain false, just assign thread_map
-                                    thread_map = BackTrackThreadMap(k, vectors[i, 0], vectors[i, 1], irow, icol);
+
+                                    return BackTrackThreadMap(k, vectors[i, 0], vectors[i, 1], irow, icol);
+                                }
+                                else
+                                {
+                                    // not threading king
+                                    return null;
                                 }
                             }
                             else
@@ -448,9 +461,7 @@ namespace FinalProject_Chess
                                     // direct check king.
                                     is_check = true;
                                     // backtrack to form thread path
-                                    thread_map = BackTrackThreadMap(k, vectors[i, 0], vectors[i, 1], irow, icol);
-
-                                    return thread_map;
+                                    return BackTrackThreadMap(k, vectors[i, 0], vectors[i, 1], irow, icol); ;
                                 }
                                 else
                                 {
