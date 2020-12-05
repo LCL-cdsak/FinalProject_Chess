@@ -35,7 +35,7 @@ namespace FinalProject_Chess
         public void RoundInitialize()
         {
             protect_path = null;
-
+            valid_path = null;
         }
 
 
@@ -423,7 +423,7 @@ namespace FinalProject_Chess
          * 
          * N:空格
          */
-        public Piece Thread_path(int row, int col, Piece[,] now_map, ref bool is_check, ref bool[,] check_path)
+        public Piece Thread_path(int row, int col, Piece[,] now_map, ref bool is_check, bool[,] check_path)
         {
             // This function will return the protect_piece,
             // ref bool[,] is set when the king is checked.
@@ -508,7 +508,7 @@ namespace FinalProject_Chess
                     {
                         if (temp_is_check)
                         {
-                            is_check = temp_is_check;
+                            is_check = true;
                             check_path = thread_path;
                         }
                         else
@@ -520,7 +520,7 @@ namespace FinalProject_Chess
                     {
                         if (temp_is_check)
                         {
-                            is_check = temp_is_check;
+                            is_check = true;
                             check_path = thread_path;
                         }
                         else
@@ -528,21 +528,27 @@ namespace FinalProject_Chess
                     }
                     break;
                 case PieceType.Bishop:
-                    thread_path = Thread_Cross_Diagonal_path(true, row, col, now_map, out is_check, out protect_piece);
+                    thread_path = Thread_Cross_Diagonal_path(true, row, col, now_map, out temp_is_check, out protect_piece);
                     if (thread_path != null)
                     {
-                        if (is_check)
+                        if (temp_is_check)
+                        {
+                            is_check = true;
                             check_path = thread_path;
+                        }
                         else
                             protect_piece.protect_path = thread_path;
                     }
                     break;
                 case PieceType.Rook:
-                    thread_path = Thread_Cross_Diagonal_path(false, row, col, now_map, out is_check, out protect_piece);
+                    thread_path = Thread_Cross_Diagonal_path(false, row, col, now_map, out temp_is_check, out protect_piece);
                     if (thread_path != null)
                     {
-                        if (is_check)
+                        if (temp_is_check)
+                        {
+                            is_check = true;
                             check_path = thread_path;
+                        }
                         else
                             protect_piece.protect_path = thread_path;
                     }

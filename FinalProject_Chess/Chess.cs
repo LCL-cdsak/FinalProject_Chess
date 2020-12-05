@@ -117,6 +117,7 @@ namespace FinalProject_Chess
         
         public void UpdateValidPath()
         {
+            Console.WriteLine("UpdateValidPath");
             is_check = false;
             check_path = null;
 
@@ -141,7 +142,8 @@ namespace FinalProject_Chess
                 {
                     if(map[row,col] != null)
                     {
-                        temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, ref check_path);// if is_check, check_path will be set
+                        temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, check_path);// if is_check, check_path will be set
+                        Console.WriteLine(is_check);
                         if (temp_piece != null)
                         {
                             //protect_piece = temp_piece;
@@ -164,7 +166,7 @@ namespace FinalProject_Chess
                     }
                 }
             }
-            
+            Console.WriteLine($"Protect_pieces count = {protect_pieces.Count()}");
             for(int i=0; i<protect_pieces.Count(); ++i)
             {
                 AndChessBoolMap(protect_pieces[i].valid_path, protect_pieces[i].protect_path);
@@ -214,7 +216,7 @@ namespace FinalProject_Chess
             }
 
             king_cant_move = AndChessKingBoolMap(king_piece_locations[current_team][0], king_piece_locations[current_team][1],
-                                                 king_pieces[current_team].valid_path, all_team_path[(current_team=="white")?"black":"white"]);
+                                                 king_pieces[current_team].valid_path, all_team_path[enemy_team]);
 
             // Determine gameover-condition(king_cant_move & no candidate to protect king)
             must_move_king = false;
@@ -223,6 +225,7 @@ namespace FinalProject_Chess
                 if (is_candidate_exists)
                 {
                     // just use the valid_path result.
+                    MessageBox.Show("candidate exists");
                 }
                 else
                 {
@@ -231,11 +234,13 @@ namespace FinalProject_Chess
                     {
                         // game over
                         is_gameover = true;
+                        MessageBox.Show("Game over");
                     }
                     else
                     {
                         // must move king, ValidPath need to use 
                         must_move_king = true;
+                        MessageBox.Show("Must move king");
                     }
                 }
             }
@@ -300,9 +305,14 @@ namespace FinalProject_Chess
             }
             // valid path
             is_selected_piece = false;
+            
             map[row, col] = map[selected_piece_location[0], selected_piece_location[1]];
             map[selected_piece_location[0], selected_piece_location[1]] = null;
-
+            if (map[row, col].piece_type == Piece.PieceType.King)
+            {
+                king_piece_locations[map[row, col].team][0] = row;
+                king_piece_locations[map[row, col].team][1] = col;
+            }
             current_team = (current_team == "white") ? "black" : "white";
             RoundInitialize();
             return true;
