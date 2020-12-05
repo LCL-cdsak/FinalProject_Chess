@@ -22,6 +22,7 @@ namespace FinalProject_Chess
                 { 'R','H','B','Q','K','B','H','R'}
             };
         public Piece[,] map = new Piece[8, 8];
+        public Piece wking = null, bking = null; // for fast access
 
         // game status
         private string current_team = null;
@@ -30,6 +31,8 @@ namespace FinalProject_Chess
 
         public Dictionary<string, bool[]> team_castling = new Dictionary<string, bool[]>();
         public Dictionary<string, bool[,]> all_team_path = new Dictionary<string, bool[,]>();
+        public bool is_check;
+        public bool[,] check_path = null; // store the king check path.
 
         //Dictionary<Piece, bool[,]> check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"非長直線"_"直接"_威脅國王之piece極其威脅路徑(Pawn, Knight, King)。
         //Dictionary<Piece, bool[,]> path_check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"長直線"_"直接"_威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。
@@ -55,6 +58,8 @@ namespace FinalProject_Chess
 
                 all_team_path[team_name] = new bool[8, 8];
 
+                check_path = null;
+
                 //check_king_pieces.Clear();
                 //path_check_king_pieces.Clear();
                 //protect_king_pieces.Clear();
@@ -62,6 +67,13 @@ namespace FinalProject_Chess
             
 
 
+        }
+        public void RoundInitialize()
+        {
+            is_check = false;
+            check_path = null;
+
+            UpdateValidPath(); // main process
         }
 
         Piece[,] CreateChessMapFromChar(char[,] char_table)
@@ -78,6 +90,18 @@ namespace FinalProject_Chess
                     else
                     {
                         chess_map[row, col] = Piece.PieceFromChar(char_table[row, col]);
+                        if(chess_map[row, col].piece_type == Piece.PieceType.King)
+                        {
+                            switch(chess_map[row, col].team)
+                            {
+                                case "white":
+                                    wking = chess_map[row, col];
+                                    break;
+                                case "black":
+                                    bking = chess_map[row, col];
+                                    break;
+                            }
+                        }
                     }
                 }
             }
@@ -88,6 +112,7 @@ namespace FinalProject_Chess
             // wrap the Piece.ValidPath, no need for arg "map")
             return map[row, col].ValidPath(row, col, map);
         }
+        
         public void UpdateValidPath()
         {
             // Init Piece Round
@@ -102,7 +127,10 @@ namespace FinalProject_Chess
                 }
             }
             // Create thread_paths, and add to the protecting_piece, set is_check
-
+            for(int i=0; i<8; ++i)
+            {
+                
+            }
 
             // Create valid_path, and do AND with protect_path
 

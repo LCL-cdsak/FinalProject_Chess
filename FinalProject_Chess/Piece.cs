@@ -417,11 +417,11 @@ namespace FinalProject_Chess
          * 
          * N:空格
          */
-        public Piece Thread_path(int row, int col, Piece[,] now_map, out bool is_check)
+        public Piece Thread_path(int row, int col, Piece[,] now_map, ref bool is_check, ref bool[,] check_path)
         {
-            // This function will return the protect_piece
+            // This function will return the protect_piece,
+            // ref bool[,] is set when the king is checked.
             Piece protect_piece = null;
-            is_check = false;
             int[,] offsets = null;
             bool[,] thread_path = null;
             switch (piece_type)
@@ -437,6 +437,9 @@ namespace FinalProject_Chess
                                 {
                                     thread_path = new bool[8, 8];
                                     thread_path[row, col] = true; // only self location is true
+                                    is_check = true;
+                                    check_path = thread_path;
+                                    return null;
                                 }
                             }
                             if( col+1 < 8)
@@ -445,6 +448,9 @@ namespace FinalProject_Chess
                                 {
                                     thread_path = new bool[8, 8];
                                     thread_path[row, col] = true;
+                                    is_check = true;
+                                    check_path = thread_path;
+                                    return null;
                                 }
                             }
                         }
@@ -458,7 +464,10 @@ namespace FinalProject_Chess
                                 if (now_map[row + 1, col - 1].piece_type == PieceType.King)
                                 {
                                     thread_path = new bool[8, 8];
-                                    thread_path[row, col] = true; // only self location is true
+                                    thread_path[row, col] = true;
+                                    is_check = true;
+                                    check_path = thread_path;
+                                    return null;
                                 }
                             }
                             if (col + 1 < 8)
@@ -467,30 +476,77 @@ namespace FinalProject_Chess
                                 {
                                     thread_path = new bool[8, 8];
                                     thread_path[row, col] = true;
+                                    is_check = true;
+                                    check_path = thread_path;
+                                    return null;
                                 }
                             }
                         }
                     }
                     break;
                 case PieceType.King:
+                    // This condition should not happend, no King will close to the other king.
                     /*offsets = new int[,] { { -1,-1}, {-1,0 }, { -1,1},
                                        { 0,-1}, {0, 1},
                                        { 1,-1}, {1, 0}, {1,1} };*/
                     return null;
-                    break;
+                    //break;
                 case PieceType.Queen:
-                    Thread_Cross_Diagonal_path(false, row, col, now_map, out is_check, out protect_piece);
-                    Thread_Cross_Diagonal_path(true, row, col, now_map, out is_check, out protect_piece);
+                    thread_path = Thread_Cross_Diagonal_path(false, row, col, now_map, out is_check, out protect_piece);
+                    if(thread_path != null)
+                    {
+                        if (is_check)
+                            check_path = thread_path;
+                        else
+                            protect_path = thread_path;
+                    }
+
+                    thread_path = Thread_Cross_Diagonal_path(true, row, col, now_map, out is_check, out protect_piece);
+                    if (thread_path != null)
+                    {
+                        if (is_check)
+                            check_path = thread_path;
+                        else
+                            protect_path = thread_path;
+                    }
                     break;
                 case PieceType.Bishop:
-                    Thread_Cross_Diagonal_path(true, row, col, now_map, out is_check, out protect_piece);
+                    thread_path = Thread_Cross_Diagonal_path(true, row, col, now_map, out is_check, out protect_piece);
+                    if (thread_path != null)
+                    {
+                        if (is_check)
+                            check_path = thread_path;
+                        else
+                            protect_path = thread_path;
+                    }
                     break;
                 case PieceType.Rook:
-                    Thread_Cross_Diagonal_path(false, row, col, now_map, out is_check, out protect_piece);
+                    thread_path = Thread_Cross_Diagonal_path(false, row, col, now_map, out is_check, out protect_piece);
+                    if (thread_path != null)
+                    {
+                        if (is_check)
+                            check_path = thread_path;
+                        else
+                            protect_path = thread_path;
+                    }
                     break;
                 case PieceType.Knight:
                     offsets = new int[,]{ {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
                                           {1, -2}, {1, 2}, {2, -1}, {2, 1}};
+                    int irow, icol;
+                    for (int i = 0; i < 8; ++i)
+                    {
+                        irow = row + offsets[i, 0];
+                        icol = col + offsets[i, 1];
+                        if(now_map[irow, icol].piece_type == PieceType.King)
+                        {
+                            thread_path = new bool[8, 8];
+                            thread_path[row, col] = true;
+                            is_check = true;
+                            check_path = thread_path;
+                            return null;
+                        }
+                    }
                     break;
             }
 
