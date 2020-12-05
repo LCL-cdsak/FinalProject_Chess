@@ -634,7 +634,7 @@ namespace FinalProject_Chess
             }
             return thread_map;
         }
-        public void Team_path(bool[,] all_team_path, int row, int col, Piece[,] now_map)
+        public void Team_path(int row, int col, Piece[,] now_map, bool[,] all_team_path)
         {
             int[,] offsets = null;
             int irow, icol;

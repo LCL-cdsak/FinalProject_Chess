@@ -34,6 +34,7 @@ namespace FinalProject_Chess
         public Dictionary<string, bool[,]> all_team_path = new Dictionary<string, bool[,]>();
         public bool is_check;
         public bool[,] check_path = null; // store the king check path.
+        public List<Piece> protect_pieces = new List<Piece>();
 
         //Dictionary<Piece, bool[,]> check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"非長直線"_"直接"_威脅國王之piece極其威脅路徑(Pawn, Knight, King)。
         //Dictionary<Piece, bool[,]> path_check_king_pieces = new Dictionary<Piece, bool[,]>(); // 儲存"長直線"_"直接"_威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。
@@ -129,6 +130,7 @@ namespace FinalProject_Chess
             }
             protect_piece = null;
             Piece temp_piece;
+            protect_pieces.Clear();
             // Create thread_paths, and add to the protecting_piece, set is_check
             for (int row = 0; row < 8; ++row)
             {
@@ -139,7 +141,8 @@ namespace FinalProject_Chess
                         temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, ref check_path);
                         if (temp_piece != null)
                         {
-                            protect_piece = temp_piece;
+                            //protect_piece = temp_piece;
+                            protect_pieces.Add(temp_piece);
                         }
                     }
                     
@@ -153,22 +156,51 @@ namespace FinalProject_Chess
                 {
                     if (map[row, col] != null)
                     {
-                        map[row, col].valid_path = map[row, col].ValidPath(row, col, map);
+                        if(map[row, col].team == current_team)
+                            map[row, col].valid_path = map[row, col].ValidPath(row, col, map);
                     }
                 }
             }
-            if(protect_piece != null)
+            
+            for(int i=0; i<protect_pieces.Count(); ++i)
             {
-                AndChessBoolMap(protect_piece.valid_path, protect_piece.protect_path);
+                AndChessBoolMap(protect_pieces[i].valid_path, protect_pieces[i].protect_path);
             }
 
             // Create all_team_path, and determine king.valid_path, king_cant_move
-
+            all_team_path["white"] = new bool[8, 8];
+            all_team_path["black"] = new bool[8, 8];
+            for(int row=0; row<8; ++row)
+            {
+                for(int col=0; col<8; ++col)
+                {
+                    if (map[row, col] != null)
+                    {
+                        map[row, col].Team_path(row, col, map, all_team_path[map[row, col].team]);
+                    }
+                }
+            }
 
             // Now, the valid path for all piece is complete
 
-            // If is_check is true, find all candidate to  protect king, 
+            // If is_check is true, check if able to protect king, 
             // Do AND to all threaded team with the thread_path (Thus, the piece which is not candidate will have a full false valid_path)
+            if (is_check)
+            {
+                for(int row=0; row<8; ++row)
+                {
+                    for(int col=0; col<8; ++col)
+                    {
+                        if(map[row, col] != null)
+                        {
+                            if(map[row, col].team == current_team)
+                            {
+                                
+                            }
+                        }
+                    }
+                }
+            }
 
             // Determine gameover-condition(king_cant_move & no candidate to protect king)
 
@@ -229,15 +261,21 @@ namespace FinalProject_Chess
             map[selected_piece_location[0], selected_piece_location[1]] = null;
             return true;
         }
-        public static void AndChessBoolMap(bool[,] a, bool[,] b)
+        public static bool AndChessBoolMap(bool[,] a, bool[,] b)
+            // The return value is true when at least one a&&b == true.
         {
+            bool result = false;
             for(int row=0; row<8; ++row)
             {
                 for(int col=0; col<8; ++col)
                 {
-                    a[row, col] &= b[row, col];
+                    if (a[row, col] && b[row, col])
+                        result = true;
+                    else
+                        a[row, col] &= b[row, col];
                 }
             }
+            return result;
         }
     }
 }
