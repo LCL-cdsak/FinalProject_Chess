@@ -4,6 +4,7 @@
 * 威脅路徑 - 從自身到王前一格，**並且自身位置=true**之bool map。
 * thread - 在中間一敵方棋移開後，可直接攻擊國王(只有米字相關移動會有)。
 * check - 可直接攻擊國王。
+* all_team_path - 為普通吃棋bool map之集合(OR運算), 給敵對國王判定用, 但友方位置為true(原本ValidPath遇到友方為false)。
 
 
 # Chess
@@ -15,8 +16,8 @@ chess中使用bool valid_left_castling, valid_right_castling用來記錄king roo
 
 新增dictionary
 * Dictionary<Piece, bool[8,8]> protect_king_pieces 儲存保王棋與敵方威脅路徑bool map。  
-//* Dictionary<Piece, bool[8,8]> check_king_pieces 儲存非長直線威脅國王之piece極其威脅路徑(Pawn, Knight, King)。  
-//* Dictionary<Piece, bool[8,8]> path_check_king_pieces 儲存長直線威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。  
+~~//* Dictionary<Piece, bool[8,8]> check_king_pieces 儲存非長直線威脅國王之piece極其威脅路徑(Pawn, Knight, King)。 ~~
+~~//* Dictionary<Piece, bool[8,8]> path_check_king_pieces 儲存長直線威脅國王棋之piece及其威脅路徑(所有長直線移動之棋)。~~  
 因為一回合內最多只有一個敵方棋能夠直接威脅國王，所以改用單變數儲存，也因AND運算方式，不須判別是否為長直線。 
 
 新增bool map
