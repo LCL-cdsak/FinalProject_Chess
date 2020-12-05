@@ -22,7 +22,7 @@ namespace FinalProject_Chess
                 { 'R','H','B','Q','K','B','H','R'}
             };
         public Piece[,] map = new Piece[8, 8];
-        public Piece wking = null, bking = null; // for fast access
+        public Dictionary<string, int[]> king_piece_locations = new Dictionary<string, int[]>();
         public Piece protect_piece = null;
 
         // game status
@@ -32,7 +32,7 @@ namespace FinalProject_Chess
 
         public Dictionary<string, bool[]> team_castling = new Dictionary<string, bool[]>();
         public Dictionary<string, bool[,]> all_team_path = new Dictionary<string, bool[,]>();
-        public bool is_check;
+        public bool is_check, king_cant_move;
         public bool[,] check_path = null; // store the king check path.
         public List<Piece> protect_pieces = new List<Piece>();
 
@@ -94,15 +94,7 @@ namespace FinalProject_Chess
                         chess_map[row, col] = Piece.PieceFromChar(char_table[row, col]);
                         if(chess_map[row, col].piece_type == Piece.PieceType.King)
                         {
-                            switch(chess_map[row, col].team)
-                            {
-                                case "white":
-                                    wking = chess_map[row, col];
-                                    break;
-                                case "black":
-                                    bking = chess_map[row, col];
-                                    break;
-                            }
+                            king_piece_locations[chess_map[row, col].team] = new int[2] { row, col };
                         }
                     }
                 }
@@ -176,7 +168,10 @@ namespace FinalProject_Chess
                 {
                     if (map[row, col] != null)
                     {
-                        map[row, col].Team_path(row, col, map, all_team_path[map[row, col].team]);
+                        if(map[row, col].team == current_team)
+                        {
+                            map[row, col].Team_path(row, col, map, all_team_path[map[row, col].team]);
+                        }
                     }
                 }
             }
@@ -184,7 +179,8 @@ namespace FinalProject_Chess
             // Now, the valid path for all piece is complete
 
             // If is_check is true, check if able to protect king, 
-            // Do AND to all threaded team with the thread_path (Thus, the piece which is not candidate will have a full false valid_path)
+            // Do AND to all threaded(current team) team with the thread_path (Thus, the piece which is not candidate will have a full false valid_path)
+            bool is_candidate_exists = false, temp_bool;
             if (is_check)
             {
                 for(int row=0; row<8; ++row)
@@ -195,12 +191,16 @@ namespace FinalProject_Chess
                         {
                             if(map[row, col].team == current_team)
                             {
-                                
+                                temp_bool = AndChessBoolMap(map[row, col].valid_path, check_path);
+                                if (temp_bool)
+                                    is_candidate_exists = true;
                             }
                         }
                     }
                 }
             }
+
+            king_cant_move = AndChessKingBoolMap()
 
             // Determine gameover-condition(king_cant_move & no candidate to protect king)
 
@@ -276,6 +276,34 @@ namespace FinalProject_Chess
                 }
             }
             return result;
+        }
+        public static bool AndChessKingBoolMap(int row, int col, bool[,] king_valid_path, bool[,] all_team_path)
+        {
+            bool is_king_cant_move = true;
+            int irow, icol;
+            for(int i=0; i<8; ++i)
+            {
+                irow = row + Piece.king_offsets[i, 0];
+                icol = col + Piece.king_offsets[i, 1];
+                if(irow >=0 && irow <8 && icol >= 0 && icol < 8)
+                {
+                    if(king_valid_path[irow, icol])
+                    {
+                        if(all_team_path[irow, icol])
+                        {
+                            // danger location
+                            king_valid_path[irow, icol] = false;
+                        }
+                        else
+                        {
+                            is_king_cant_move = false;
+                        }
+                    }
+                }
+                
+            }
+
+            return is_king_cant_move;
         }
     }
 }

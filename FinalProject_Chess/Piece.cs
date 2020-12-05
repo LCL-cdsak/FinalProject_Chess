@@ -14,6 +14,10 @@ namespace FinalProject_Chess
         public bool[,] valid_path = new bool[8, 8];
         public bool[,] protect_path = null;
 
+        public static readonly int[,] king_offsets = { { -1,-1}, {-1,0 }, { -1,1},
+                                         { 0,-1}, {0, 1},
+                                         { 1,-1}, {1, 0}, {1,1} };
+
         public Piece(string _team, string piece_type_name)
         {
             if (!Enum.TryParse(piece_type_name, true, out piece_type))
@@ -679,7 +683,8 @@ namespace FinalProject_Chess
                     {
                         irow = row + offsets[i, 0];
                         icol = col + offsets[i, 1];
-                        all_team_path[irow, icol] = true;
+                        if (0 <= irow && irow < 8 && 0 <= icol && icol < 8)
+                            all_team_path[irow, icol] = true;
                     }
                     break;
                 case PieceType.Queen:
@@ -699,7 +704,8 @@ namespace FinalProject_Chess
                     {
                         irow = row + offsets[i, 0];
                         icol = col + offsets[i, 1];
-                        all_team_path[irow, icol] = true;
+                        if (0 <= irow && irow < 8 && 0 <= icol && icol < 8)
+                            all_team_path[irow, icol] = true;
                     }
                     break;
             }
