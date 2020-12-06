@@ -138,16 +138,17 @@ namespace FinalProject_Chess
             // Create thread_paths, and add to the protecting_piece, set is_check
             for (int row = 0; row < 8; ++row)
             {
-                for(int col=0; col<8; ++col)
+                for(int col = 0; col < 8; ++col)
                 {
                     if(map[row,col] != null)
                     {
-                        temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, check_path);// if is_check, check_path will be set
-                        Console.WriteLine(is_check);
+                        temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, ref check_path);// if is_check, check_path will be set
+                        //Console.WriteLine($"{map[row, col].team} {map[row, col].piece_type.ToString()} {is_check}");
                         if (temp_piece != null)
                         {
-                            //protect_piece = temp_piece;
-                            protect_pieces.Add(temp_piece);
+                            // not check, but protecting
+                            if(temp_piece.team == current_team)
+                                protect_pieces.Add(temp_piece);
                         }
                     }
                     
@@ -204,7 +205,7 @@ namespace FinalProject_Chess
                     {
                         if(map[row, col] != null)
                         {
-                            if(map[row, col].team == current_team)
+                            if(map[row, col].team == current_team && map[row, col].piece_type != Piece.PieceType.King)
                             {
                                 temp_bool = AndChessBoolMap(map[row, col].valid_path, check_path);
                                 if (temp_bool)
@@ -274,6 +275,7 @@ namespace FinalProject_Chess
         }
         public bool MovePiece(int row, int col, out bool is_deselect)
         {
+            Console.WriteLine($"Move {selected_piece_location[0]} {selected_piece_location[1]}, {row} {col}");
             if (IsDeselect(row, col))
             {
                 // player want to deselect the piece, let it be a false move
@@ -305,7 +307,8 @@ namespace FinalProject_Chess
             }
             // valid path
             is_selected_piece = false;
-            
+
+            RemovePiece(row, col);
             map[row, col] = map[selected_piece_location[0], selected_piece_location[1]];
             map[selected_piece_location[0], selected_piece_location[1]] = null;
             if (map[row, col].piece_type == Piece.PieceType.King)
@@ -316,6 +319,11 @@ namespace FinalProject_Chess
             current_team = (current_team == "white") ? "black" : "white";
             RoundInitialize();
             return true;
+        }
+        public void RemovePiece(int row, int col)
+        {
+            // Add stuff need to be clean here
+            map[row, col] = null;
         }
         public static bool AndChessBoolMap(bool[,] a, bool[,] b)
             // The return value is true when at least one a&&b == true.
