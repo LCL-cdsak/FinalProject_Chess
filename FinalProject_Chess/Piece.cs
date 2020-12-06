@@ -423,7 +423,7 @@ namespace FinalProject_Chess
          * 
          * N:空格
          */
-        public Piece Thread_path(int row, int col, Piece[,] now_map, ref bool is_check, bool[,] check_path)
+        public Piece Thread_path(int row, int col, Piece[,] now_map, ref bool is_check, ref bool[,] check_path)
         {
             // This function will return the protect_piece,
             // ref bool[,] is set when the king is checked.
@@ -441,7 +441,7 @@ namespace FinalProject_Chess
                             if (col - 1 >= 0)
                             {
                                 if (now_map[row - 1, col - 1] != null)
-                                    if (now_map[row-1, col-1].piece_type == PieceType.King)
+                                    if (now_map[row-1, col-1].team != team && now_map[row-1, col-1].piece_type == PieceType.King)
                                     {
                                         thread_path = new bool[8, 8];
                                         thread_path[row, col] = true; // only self location is true
@@ -453,7 +453,7 @@ namespace FinalProject_Chess
                             if( col+1 < 8)
                             {
                                 if (now_map[row - 1, col + 1] != null)
-                                    if (now_map[row-1, col+1].piece_type == PieceType.King)
+                                    if (now_map[row - 1, col + 1].team != team && now_map[row-1, col+1].piece_type == PieceType.King)
                                     {
                                         thread_path = new bool[8, 8];
                                         thread_path[row, col] = true;
@@ -471,7 +471,7 @@ namespace FinalProject_Chess
                             if (col - 1 >= 0)
                             {
                                 if (now_map[row + 1, col - 1] != null)
-                                    if (now_map[row + 1, col - 1].piece_type == PieceType.King)
+                                    if (now_map[row + 1, col - 1].team != team && now_map[row + 1, col - 1].piece_type == PieceType.King)
                                     {
                                         thread_path = new bool[8, 8];
                                         thread_path[row, col] = true;
@@ -483,7 +483,7 @@ namespace FinalProject_Chess
                             if (col + 1 < 8)
                             {
                                 if(now_map[row+1, col+1] != null)
-                                    if (now_map[row + 1, col + 1].piece_type == PieceType.King)
+                                    if (now_map[row + 1, col + 1].team != team && now_map[row + 1, col + 1].piece_type == PieceType.King)
                                     {
                                         thread_path = new bool[8, 8];
                                         thread_path[row, col] = true;
@@ -565,14 +565,18 @@ namespace FinalProject_Chess
                         {
                             if(now_map[irow, icol] != null)
                             {
-                                if (now_map[irow, icol].piece_type == PieceType.King)
+                                if(now_map[irow, icol].team != team)
                                 {
-                                    thread_path = new bool[8, 8];
-                                    thread_path[row, col] = true;
-                                    is_check = true;
-                                    check_path = thread_path;
-                                    return null;
+                                    if (now_map[irow, icol].piece_type == PieceType.King)
+                                    {
+                                        thread_path = new bool[8, 8];
+                                        thread_path[row, col] = true;
+                                        is_check = true;
+                                        check_path = thread_path;
+                                        return null;
+                                    }
                                 }
+                                
                             }
                             
                         }
@@ -586,6 +590,8 @@ namespace FinalProject_Chess
         public bool[,] Thread_Cross_Diagonal_path(bool is_diagonal, int row, int col, Piece[,] now_map, out bool is_check, out Piece protect_piece)
         {
             // Calculate and return "thread path"
+            // the is_check is temp for Chess, not the game's is_check, just this single piece.
+            // Check or Protect will have return value.
             // if is_diagonal is false, do cross_path
             is_check = false; // if the king get "direct" check.
             protect_piece = null;
@@ -605,10 +611,12 @@ namespace FinalProject_Chess
             for(int i=0; i<4; ++i)
             {
                 is_crossed = false;
+                irow = row;
+                icol = col;
                 for(int k=0; k<7; ++k)
                 {
-                    irow = row + vectors[i, 0];
-                    icol = col + vectors[i, 1];
+                    irow += vectors[i, 0];
+                    icol += vectors[i, 1];
                     if(0<=irow && irow < 8 && 0<=icol && icol<8)
                     {
                         if (now_map[irow, icol] != null)
@@ -628,8 +636,8 @@ namespace FinalProject_Chess
                                 }
                                 else
                                 {
-                                    // not threading king
-                                    return null;
+                                    // this path is not threading king
+                                    break;
                                 }
                             }
                             else
@@ -644,14 +652,14 @@ namespace FinalProject_Chess
                                 else
                                 {
                                     is_crossed = true;
+                                    protect_piece = now_map[irow, icol];
                                 }
                             }
                         }
                     }
                 }
-                    
-                
             }
+            protect_piece = null;
             return null;
         }
         public bool[,] BackTrackThreadMap(int k, int r_vec, int c_vec, int irow, int icol)
@@ -752,10 +760,12 @@ namespace FinalProject_Chess
             int irow, icol;
             for (int i = 0; i < 4; ++i)
             {
+                irow = row;
+                icol = col;
                 for (int k = 0; k < 7; ++k)
                 {
-                    irow = row + vectors[i, 0];
-                    icol = col + vectors[i, 1];
+                    irow += vectors[i, 0];
+                    icol += vectors[i, 1];
                     if (0 <= irow && irow < 8 && 0 <= icol && icol < 8)
                     {
                         if(now_map[irow, icol]==null)
