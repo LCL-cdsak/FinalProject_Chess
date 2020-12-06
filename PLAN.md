@@ -24,28 +24,27 @@ chess中使用bool valid_left_castling, valid_right_castling用來記錄king roo
 * Dictionary<string, bool[8,8]> all_team_path - 為全部同team之OR運算結果(應在保王棋判斷完後再建立)。
 
 1. 首先計算全部piece [thread_king_map]，並且將結果存至該保王棋之protect_path。
-~~建立path_check_king_pieces, check_king_pieces.~~  
 2. 計算piece之ValidPath，存至piece.valid_path。  
-3. 將保國王piece.valid_path 與所有 thread_king_map(piece.protect_path) 做 **AND**。  
-4. 建立所有隊伍之all_team_path。 
+3. 將所有保國王piece.valid_path 與 其piece.protect_path 做 **AND**。  
+4. 建立敵方隊伍之all_team_path。 
 5. 將國王piece.valid_path(詳細於King Check)與敵方all_team_path做檢查[king.valid_path & !(all_team_path)]。
-   * 若有威脅路徑無法被任何本team all_team_path阻擋，則需檢查國王是否能閃躲，若無法則敗。
-   * 若可，則玩家必須幫國王阻擋。
+6. 如果有check發生，全部piece.valid_path對chess.check_path 做 **AND**，若有任何棋可移動阻擋，則bool is_candidate_exists = true，否則false。
+7. 判斷結果
+   * 若有威脅路徑無法被任何本team all_team_path阻擋(is_candidate_exists==false)，則需檢查國王是否能閃躲，若無法則敗(在Chess.ValidPath做判斷式)。
+   * 若可，則玩家必須幫國王阻擋(已在6.完成)。
 
 
 # Piece
 在Piece中新增"bool[8,8] valid_path"，會把結果存於此，chess中也直接對Piece.path_map做國王判定等操作。
-新增bool  
-* bool protecting_king; 即為保王棋。  
-* bool can_protect_king; 即為潛在可保王棋，在check時，只能移動此項為true之棋。  
+
 新增bool[]  
 * protect_path - 由威脅棋計算，再添加到保王棋內。  
 
-含有兩種valid path function。  
-
+Valid path functions  
 * ValidPath(old) 為到友軍停，到敵軍設成true後停。
-
-* Thread_Cross/Diagonal_path 為到友軍停，到敵軍後再繼續偵測，若下一目標為國王，則回傳thread_king = true, 以及該威脅bool map。
+* Thread_path 產生各種piece之威脅路徑，is_check是ref，應為chess.is_check。
+* Thread_Cross/Diagonal_path 為到友軍停，到敵軍後再繼續偵測，若下一目標為國王，則回傳該威脅bool map，若有check，則設is_check為true(out)。
+* Team_path 為到友軍停，但將友軍設為true，敵軍不影響。
 
 
 # King Check
@@ -56,5 +55,5 @@ chess中使用bool valid_left_castling, valid_right_castling用來記錄king roo
 //2. 威脅棋在九宮格內 - 直接用all_team_path, 國王valid_path做檢查(由於valid path不包含威脅棋本身，所以不影響王若可吃該棋的判斷)。  
 
 國王走位計算  
-利用AND敵方all_team_path計算，得到之結果則為可走路徑，若沒有任何，設king_cant_move為true。  
-當check時，判斷king_cant_move，若無法，check是否有任何一個友方能夠走到威脅路徑上，沒有則敗(可能多設個bool於Piece，當check時判定是否為阻擋棋，若不是阻擋棋則不可動)。
+利用敵方all_team_path計算，得到之結果則為可走路徑，若沒有任何，設king_cant_move為true。  
+當check時，判斷king_cant_move，若無法，check是否有任何一個友方能夠走到威脅路徑上，沒有則敗。
