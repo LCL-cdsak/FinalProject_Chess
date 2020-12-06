@@ -45,11 +45,11 @@ namespace FinalProject_Chess
             }
         }
 
-       /* public int minmax(string status, ref Piece[,] current, int layer, int max_layer, ref int fromx, ref int fromy, ref int tox, ref int toy,int g,int h)//current is map status，return point of a match
+        /*public int minmax(string status, ref Piece[,] current, int layer, int max_layer, ref int fromx, ref int fromy, ref int tox, ref int toy, int g, int h)//current is map status，return point of a match
         {
             int value = 0;
             if (layer == 0)
-                return calculate_point(ref current,g,h);
+                return calculate_point(ref current, g, h);
             if (status == "black")
             {
                 value = int.MinValue;
@@ -70,10 +70,10 @@ namespace FinalProject_Chess
                                         current[m, n] = current[i, j];
                                         current[i, j] = null;
 
-                                        int c = minmax("white", ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy,m,n);
+                                        int c = minmax("white", ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy, m, n);
                                         if (c > value)
                                         {
-                                            if (max_layer ==layer)
+                                            if (max_layer == layer)
                                             {
                                                 fromx = i;
                                                 fromy = j;
@@ -108,8 +108,8 @@ namespace FinalProject_Chess
                                         //move piece from i,j to m,n
                                         temp = current[m, n];
                                         current[m, n] = current[i, j];
-                                        current[i, j] = null;                    
-                                        int c = minmax("white", ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy,m,n);
+                                        current[i, j] = null;
+                                        int c = minmax("white", ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy, m, n);
                                         if (c < value)
                                             value = c;
                                         //回復原盤面
