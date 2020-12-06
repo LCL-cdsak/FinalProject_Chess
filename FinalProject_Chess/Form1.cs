@@ -72,7 +72,7 @@ namespace FinalProject_Chess
                     }
                     return;
                 }
-                /*algorithm.AI(ref chess.map);
+                algorithm.AI(ref chess.map);
                 for (int i = 0; i < 8; i++)
                 {
                     Console.WriteLine();
@@ -129,7 +129,7 @@ namespace FinalProject_Chess
                                 }
                         }
                 }
-                Console.WriteLine();*/
+                Console.WriteLine();
                 // the piece is now moved to new location
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;

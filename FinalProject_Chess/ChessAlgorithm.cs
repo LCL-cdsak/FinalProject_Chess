@@ -130,7 +130,7 @@ namespace FinalProject_Chess
                                                                 current[a, b] = null;
                                                                 //**********************************************
                                                                 int y = minmax(ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy);
-                                                                Console.Write(y);
+                                                              //  Console.Write(y);
                                                                 x = x > y ? x : y;//選出子棋局最大的分數，紀錄在x裡
                                                                 if (highest_score_of_a_match < (x + z))
                                                                 {
@@ -166,7 +166,7 @@ namespace FinalProject_Chess
         {
             int fromx = 0, fromy = 0, tox = 0, toy = 0;
             int k = minmax(ref map, 1, 1, ref fromx, ref fromy, ref tox, ref toy);
-            Console.Write(k);
+            //Console.Write(k);
             /*Console.WriteLine(map[i, j].piece_type);
             for (int g = 0; g < 8; g++)
             {
