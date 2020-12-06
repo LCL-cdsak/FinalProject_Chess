@@ -35,7 +35,7 @@ namespace FinalProject_Chess
         public PictureBox piece;
         public Point[,] point = new Point[8, 8];// the coordinate of each block
         public Panel table = new Panel();
-      //  ChessAlgorithm algorithm = new ChessAlgorithm();
+
 
         public Form1()
         {
@@ -125,7 +125,6 @@ namespace FinalProject_Chess
                                     case Piece.PieceType.Rook:
                                         Console.Write("BRook    ");
                                         break;
-
                                 }
                         }
                 }
@@ -133,20 +132,6 @@ namespace FinalProject_Chess
                 // the piece is now moved to new location
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;
-
-               /* algorithm.AI(ref chess.map);
-                for (int i = 0; i < 8; i++)
-                {
-                    Console.WriteLine();
-                    for (int j = 0; j < 8; j++)
-                        if (chess.map[i, j] == null)
-                            Console.Write("n  ");
-                        else
-                        {
-                            Console.Write(chess.map[i, j].piece_type);
-                        }
-                }
-                Console.WriteLine();*/
             }
             else
             {
@@ -155,10 +140,9 @@ namespace FinalProject_Chess
                 {
                     piece = pics[GetPictureBoxIndexFromLocation(y, x)];
                     piece.BackColor = Color.LightBlue;
-                    
                 }
+
             }
-            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -168,7 +152,6 @@ namespace FinalProject_Chess
 
         private void initial()
         {
-       
             for (int i = 0; i < 32; i++)
             {
                 pics[i] = new PictureBox();
@@ -196,7 +179,7 @@ namespace FinalProject_Chess
                     pics[c - 1].Location = point[i, j];
                 }
             }
-            
+
         }
         public int GetPictureBoxIndexFromLocation(int row, int col)
         {

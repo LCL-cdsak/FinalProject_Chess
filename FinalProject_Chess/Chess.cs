@@ -219,7 +219,7 @@ namespace FinalProject_Chess
             king_cant_move = AndChessKingBoolMap(king_piece_locations[current_team][0], king_piece_locations[current_team][1],
                                                  king_pieces[current_team].valid_path, all_team_path[enemy_team]);
 
-            //Determine gameover-condition(king_cant_move & no candidate to protect king)
+            // Determine gameover-condition(king_cant_move & no candidate to protect king)
             must_move_king = false;
             if (is_check)
             {
@@ -316,7 +316,7 @@ namespace FinalProject_Chess
                 king_piece_locations[map[row, col].team][0] = row;
                 king_piece_locations[map[row, col].team][1] = col;
             }
-         //   current_team = (current_team == "white") ? "black" : "white";
+            //current_team = (current_team == "white") ? "black" : "white";
             RoundInitialize();
             return true;
         }
@@ -364,9 +364,7 @@ namespace FinalProject_Chess
                         }
                     }
                 }
-                
             }
-
             return is_king_cant_move;
         }
     }
