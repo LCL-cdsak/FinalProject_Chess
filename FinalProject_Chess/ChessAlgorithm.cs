@@ -209,7 +209,7 @@ namespace FinalProject_Chess
         public void AI(ref Piece[,] map)
         {
             int fromx = 0, fromy = 0, tox = 0, toy = 0;
-            minmax(ref map, 4, 4, ref fromx, ref fromy, ref tox, ref toy,0,0);
+            minmax(ref map, 4, 4, ref fromx, ref fromy, ref tox, ref toy);
             map[tox, toy] = map[fromx, fromy];
             map[fromx, fromy] = null;
         }
