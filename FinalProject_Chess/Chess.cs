@@ -116,3 +116,5 @@ namespace FinalProject_Chess
             map[selected_piece_location[0], selected_piece_location[1]] = null;
             return true;
         }
+    }
+}

@@ -30,7 +30,8 @@ namespace FinalProject_Chess
     public partial class Form1 : Form
     {
         Chess chess = new Chess();
-        public PictureBox[] pics= new PictureBox[32];//used to display pieces related to map
+        ChessAlgorithm algorithm = new ChessAlgorithm();
+        public PictureBox[] pics = new PictureBox[32];//used to display pieces related to map
         public PictureBox piece;
         public Point[,] point = new Point[8, 8];// the coordinate of each block
         public Panel table = new Panel();
@@ -71,7 +72,64 @@ namespace FinalProject_Chess
                     }
                     return;
                 }
+                algorithm.AI(ref chess.map);
+                for (int i = 0; i < 8; i++)
+                {
+                    Console.WriteLine();
+                    for (int j = 0; j < 8; j++)
+                        if (chess.map[i, j] == null)
+                            Console.Write("    n    ");
+                        else
+                        {
+                            if (chess.map[i, j].team == "white")
+                                switch (chess.map[i, j].piece_type)
+                                {
+                                    case Piece.PieceType.Bishop:
+                                        Console.Write("Wbishop  ");
+                                        break;
+                                    case Piece.PieceType.King:
+                                        Console.Write("Wking    ");
+                                        break;
+                                    case Piece.PieceType.Knight:
+                                        Console.Write("WKnight  ");
+                                        break;
+                                    case Piece.PieceType.Pawn:
+                                        Console.Write("WPawn    ");
+                                        break;
+                                    case Piece.PieceType.Queen:
+                                        Console.Write("WQueen   ");
+                                        break;
+                                    case Piece.PieceType.Rook:
+                                        Console.Write("WRook    ");
+                                        break;
 
+                                }
+                            else
+                                switch (chess.map[i, j].piece_type)
+                                {
+                                    case Piece.PieceType.Bishop:
+                                        Console.Write("Bbishop  ");
+                                        break;
+                                    case Piece.PieceType.King:
+                                        Console.Write("Bking    ");
+                                        break;
+                                    case Piece.PieceType.Knight:
+                                        Console.Write("BKnight  ");
+                                        break;
+                                    case Piece.PieceType.Pawn:
+                                        Console.Write("BPawn    ");
+                                        break;
+                                    case Piece.PieceType.Queen:
+                                        Console.Write("BQueen   ");
+                                        break;
+                                    case Piece.PieceType.Rook:
+                                        Console.Write("BRook    ");
+                                        break;
+
+                                }
+                        }
+                }
+                Console.WriteLine();
                 // the piece is now moved to new location
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;
@@ -79,7 +137,7 @@ namespace FinalProject_Chess
             else
             {
                 // select the piece if player valid
-                if(chess.SelectPiece(y, x))
+                if (chess.SelectPiece(y, x))
                 {
                     piece = pics[GetPictureBoxIndexFromLocation(y, x)];
                     piece.BackColor = Color.LightBlue;
@@ -124,9 +182,9 @@ namespace FinalProject_Chess
         }
         public int GetPictureBoxIndexFromLocation(int row, int col)
         {
-            for(int i=0; i<32; ++i)
+            for (int i = 0; i < 32; ++i)
             {
-                if(pics[i].Location == point[row, col])
+                if (pics[i].Location == point[row, col])
                 {
                     return i;
                 }
