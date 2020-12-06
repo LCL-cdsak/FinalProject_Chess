@@ -44,38 +44,87 @@ namespace FinalProject_Chess
                 }
             }
         }
-        /*public int minmax(ref Piece[,] current, int layer, int max_layer, ref int fromx, ref int fromy, ref int tox, ref int toy, string _case)//current is map status，return point of a match
+
+       /* public int minmax(string status, ref Piece[,] current, int layer, int max_layer, ref int fromx, ref int fromy, ref int tox, ref int toy,int g,int h)//current is map status，return point of a match
         {
-            int point = 0;
+            int value = 0;
             if (layer == 0)
-                return 0;
-            else if (_case == "max")//max表示我方下棋
+                return calculate_point(ref current,g,h);
+            if (status == "black")
             {
+                value = int.MinValue;
+                Piece temp;
                 for (int i = 0; i < 8; i++)
                     for (int j = 0; j < 8; j++)
-                    {
-                        //for loop all valid path，calculate the points(max and min)
-                        if (current[i, j] == null)
+                        if (current[i, j] == null || current[i, j].team == "white")
                             continue;
-                        else if (current[i, j].team == "black")//set com as black temporary
+                        else
                         {
-                            bool[,] paths = current[i, j].ValidPath(i, j, current);
-                            for(int m=0;m<8;m++)
-                                for(int n=0;n<8;n++)
-                                {
-                                    if(paths[m,n])
+                            bool[,] path = current[i, j].ValidPath(i, j, current);
+                            for (int m = 0; m < 8; m++)
+                                for (int n = 0; n < 8; n++)
+                                    if (path[m, n])
                                     {
-                                          
-                                    } 
-                                }
+                                        //move piece from i,j to m,n
+                                        temp = current[m, n];
+                                        current[m, n] = current[i, j];
+                                        current[i, j] = null;
+
+                                        int c = minmax("white", ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy,m,n);
+                                        if (c > value)
+                                        {
+                                            if (max_layer ==layer)
+                                            {
+                                                fromx = i;
+                                                fromy = j;
+                                                tox = m;
+                                                toy = n;
+                                            }
+                                            value = c;
+                                        }
+
+                                        //回復原盤面
+                                        current[i, j] = current[m, n];
+                                        current[m, n] = temp;
+                                    }
                         }
-                    }
             }
+            else
+            {
+                value = int.MaxValue;
+                Piece temp;
+                for (int i = 0; i < 8; i++)
+                    for (int j = 0; j < 8; j++)
+                        if (current[i, j] == null || current[i, j].team == "black")
+                            continue;
+                        else
+                        {
+                            bool[,] path = current[i, j].ValidPath(i, j, current);
+                            for (int m = 0; m < 8; m++)
+                                for (int n = 0; n < 8; n++)
+                                    if (path[m, n])
+                                    {
+                                        int k = calculate_point(ref current, m, n);
+                                        //move piece from i,j to m,n
+                                        temp = current[m, n];
+                                        current[m, n] = current[i, j];
+                                        current[i, j] = null;                    
+                                        int c = minmax("white", ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy,m,n);
+                                        if (c < value)
+                                            value = c;
+                                        //回復原盤面
+                                        current[i, j] = current[m, n];
+                                        current[m, n] = temp;
+                                    }
+                        }
+            }
+            return value;
+
         }*/
         public int minmax(ref Piece[,] current, int layer, int max_layer, ref int fromx, ref int fromy, ref int tox, ref int toy)//current is map status，return point of a match
         {
-            int z = int.MinValue;
             int highest_score_of_a_match = int.MinValue;
+            int x = int.MinValue;
             if (layer < 0)
                 return 0;
             Piece temp;
@@ -102,7 +151,6 @@ namespace FinalProject_Chess
                                     current[m, n] = current[i, j];
                                     current[i, j] = null;
                                     //**********************************************
-                                    int x = int.MinValue;
                                     for (int a = 0; a < 8; a++)
                                         for (int b = 0; b < 8; b++)
                                         {
@@ -120,17 +168,13 @@ namespace FinalProject_Chess
                                                             else
                                                             {
                                                                 temp_score_2 = calculate_point(ref current, c, d);
-                                                                int l = temp_score - temp_score_2;//此局分數(選最小的)
-                                                                if (z > l)
-                                                                    continue;
-                                                                z = l;
+                                                                int z = temp_score - temp_score_2;//此局分數
                                                                 //*******moving piece from [a,b] to [c,d]*******
                                                                 temp2 = current[c, d];
                                                                 current[c, d] = current[a, b];
                                                                 current[a, b] = null;
                                                                 //**********************************************
                                                                 int y = minmax(ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy);
-                                                                Console.Write(y);
                                                                 x = x > y ? x : y;//選出子棋局最大的分數，紀錄在x裡
                                                                 if (highest_score_of_a_match < (x + z))
                                                                 {
@@ -165,22 +209,9 @@ namespace FinalProject_Chess
         public void AI(ref Piece[,] map)
         {
             int fromx = 0, fromy = 0, tox = 0, toy = 0;
-            int k = minmax(ref map, 1, 1, ref fromx, ref fromy, ref tox, ref toy);
-            Console.Write(k);
-            /*Console.WriteLine(map[i, j].piece_type);
-            for (int g = 0; g < 8; g++)
-            {
-                Console.WriteLine();
-                for (int h = 0; h < 8; h++)
-                {
-                    Console.Write(paths[g, h]);
-                }
-            }
-            Console.WriteLine();   */
+            minmax(ref map, 4, 4, ref fromx, ref fromy, ref tox, ref toy,0,0);
             map[tox, toy] = map[fromx, fromy];
             map[fromx, fromy] = null;
         }
     }
 }
-
-

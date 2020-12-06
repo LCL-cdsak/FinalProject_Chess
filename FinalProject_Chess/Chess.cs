@@ -356,9 +356,7 @@ namespace FinalProject_Chess
                         }
                     }
                 }
-                
             }
-
             return is_king_cant_move;
         }
     }
