@@ -17,6 +17,7 @@ namespace FinalProject_Chess
   * queen = 11
   * king = 1000
   */
+        public Chess chess;
         public int calculate_point(ref Piece[,] current, int i, int j)
         {
             if (current[i, j] == null)
@@ -210,8 +211,14 @@ namespace FinalProject_Chess
         {
             int fromx = 0, fromy = 0, tox = 0, toy = 0;
             minmax(ref map, 1, 1, ref fromx, ref fromy, ref tox, ref toy);
-            map[tox, toy] = map[fromx, fromy];
-            map[fromx, fromy] = null;
+
+            bool is_deselect;
+
+            chess.is_selected_piece = false;
+            chess.SelectPiece(fromx, fromy);
+            chess.MovePiece(tox, toy, out is_deselect);
+            //map[tox, toy] = map[fromx, fromy];
+            //map[fromx, fromy] = null;
         }
     }
 }
