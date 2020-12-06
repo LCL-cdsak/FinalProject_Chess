@@ -181,7 +181,6 @@ namespace FinalProject_Chess
                     pics[c - 1].Location = point[i, j];
                 }
             }
-
         }
         public int GetPictureBoxIndexFromLocation(int row, int col)
         {
