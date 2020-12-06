@@ -147,7 +147,8 @@ namespace FinalProject_Chess
                         if (temp_piece != null)
                         {
                             // not check, but protecting
-                            protect_pieces.Add(temp_piece);
+                            if(temp_piece.team == current_team)
+                                protect_pieces.Add(temp_piece);
                         }
                     }
                     
@@ -306,7 +307,8 @@ namespace FinalProject_Chess
             }
             // valid path
             is_selected_piece = false;
-            
+
+            RemovePiece(row, col);
             map[row, col] = map[selected_piece_location[0], selected_piece_location[1]];
             map[selected_piece_location[0], selected_piece_location[1]] = null;
             if (map[row, col].piece_type == Piece.PieceType.King)
@@ -317,6 +319,11 @@ namespace FinalProject_Chess
             current_team = (current_team == "white") ? "black" : "white";
             RoundInitialize();
             return true;
+        }
+        public void RemovePiece(int row, int col)
+        {
+            // Add stuff need to be clean here
+            map[row, col] = null;
         }
         public static bool AndChessBoolMap(bool[,] a, bool[,] b)
             // The return value is true when at least one a&&b == true.
