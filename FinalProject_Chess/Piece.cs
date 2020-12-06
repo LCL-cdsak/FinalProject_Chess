@@ -65,7 +65,7 @@ namespace FinalProject_Chess
                                     if (now_map[row + 1, col + 1].team == "white") bool_map[row + 1, col + 1] = true;
                                 }
                             }
-                            if (col - 1 > 0)
+                            if (col - 1 >= 0)
                             {
                                 if (now_map[row + 1, col - 1] != null)
                                 {
@@ -81,7 +81,7 @@ namespace FinalProject_Chess
                     }
                     else if(team == "white")
                     {
-                        if (row - 1 > 0)
+                        if (row - 1 >= 0)
                         {
                             if (now_map[row - 1, col] == null)
                             {
@@ -94,7 +94,7 @@ namespace FinalProject_Chess
                                     if (now_map[row - 1, col + 1].team == "black") bool_map[row - 1, col + 1] = true;
                                 }
                             }
-                            if (col - 1 > 0)
+                            if (col - 1 >= 0)
                             {
                                 if (now_map[row - 1, col - 1] != null)
                                 {

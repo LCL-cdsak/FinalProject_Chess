@@ -35,7 +35,7 @@ namespace FinalProject_Chess
         public PictureBox piece;
         public Point[,] point = new Point[8, 8];// the coordinate of each block
         public Panel table = new Panel();
-        ChessAlgorithm algorithm = new ChessAlgorithm();
+      //  ChessAlgorithm algorithm = new ChessAlgorithm();
 
         public Form1()
         {
@@ -134,7 +134,7 @@ namespace FinalProject_Chess
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;
 
-                algorithm.AI(ref chess.map);
+               /* algorithm.AI(ref chess.map);
                 for (int i = 0; i < 8; i++)
                 {
                     Console.WriteLine();
@@ -146,7 +146,7 @@ namespace FinalProject_Chess
                             Console.Write(chess.map[i, j].piece_type);
                         }
                 }
-                Console.WriteLine();
+                Console.WriteLine();*/
             }
             else
             {
