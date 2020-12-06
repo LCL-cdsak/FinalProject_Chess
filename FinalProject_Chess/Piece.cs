@@ -510,6 +510,7 @@ namespace FinalProject_Chess
                         {
                             is_check = true;
                             check_path = thread_path;
+                            return null;
                         }
                         else
                             protect_piece.protect_path = thread_path;
@@ -522,6 +523,7 @@ namespace FinalProject_Chess
                         {
                             is_check = true;
                             check_path = thread_path;
+                            return null;
                         }
                         else
                             protect_piece.protect_path = thread_path;
@@ -535,6 +537,7 @@ namespace FinalProject_Chess
                         {
                             is_check = true;
                             check_path = thread_path;
+                            return null;
                         }
                         else
                             protect_piece.protect_path = thread_path;
@@ -548,6 +551,7 @@ namespace FinalProject_Chess
                         {
                             is_check = true;
                             check_path = thread_path;
+                            return null;
                         }
                         else
                             protect_piece.protect_path = thread_path;
