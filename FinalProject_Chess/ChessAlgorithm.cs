@@ -19,6 +19,8 @@ namespace FinalProject_Chess
   */
         public int calculate_point(Piece[,] current, int i, int j)
         {
+            if (current[i, j] == null)
+                return 0;
             switch (current[i, j].piece_type)
             {
                 case Piece.PieceType.Queen:
@@ -81,7 +83,7 @@ namespace FinalProject_Chess
                                                             current[c, d] = current[a, b];
                                                             current[a, b] = null;
                                                             //**********************************************
-                                                            int highest_score = minmax(current, point + temp_score - temp_score_2, layer - 1);
+                                                            int highest_score = minmax(ref current, point + temp_score - temp_score_2, layer - 1);
                                                             point = highest_score > point ? highest_score : point;
                                                             //*******recover map to initial status**********
                                                             current[a, b] = current[c, d];
@@ -116,7 +118,7 @@ namespace FinalProject_Chess
                             {
                                 if (paths[m, n])
                                 {
-                                    int c = minmax(ref map, 0, 4);
+                                    int c = minmax(ref map, 0, 1);
                                     point = point > c ? point : c;
                                     //若point改成c，則i,j移動到m,n為當前最佳步法
                                     if (point == c)
