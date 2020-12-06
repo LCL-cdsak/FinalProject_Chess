@@ -772,8 +772,8 @@ namespace FinalProject_Chess
                             all_team_path[irow, icol] = true;
                         else
                         {
-                            if (now_map[irow, icol].team == team)
-                                all_team_path[irow, icol] = true;
+                            all_team_path[irow, icol] = true;
+                            break;
                         }
                     }
                 }
