@@ -25,7 +25,7 @@ namespace FinalProject_Chess
         public Dictionary<string, int[]> king_piece_locations = new Dictionary<string, int[]>();
         public Dictionary<string, Piece> king_pieces = new Dictionary<string, Piece>();
         public Piece protect_piece = null;
-
+        public bool map_NotNull=false;
         // game status
         private string current_team = null;
         public bool is_selected_piece = false; // true when player has seleted a piece
@@ -307,7 +307,14 @@ namespace FinalProject_Chess
             }
             // valid path
             is_selected_piece = false;
-
+            if (map[row, col] != null)
+            {
+                map_NotNull = true;
+            }
+            else
+            {
+                map_NotNull = false;
+            }
             RemovePiece(row, col);
             map[row, col] = map[selected_piece_location[0], selected_piece_location[1]];
             map[selected_piece_location[0], selected_piece_location[1]] = null;
@@ -316,7 +323,7 @@ namespace FinalProject_Chess
                 king_piece_locations[map[row, col].team][0] = row;
                 king_piece_locations[map[row, col].team][1] = col;
             }
-            //current_team = (current_team == "white") ? "black" : "white";
+           // current_team = (current_team == "white") ? "black" : "white";
             RoundInitialize();
             return true;
         }

@@ -35,12 +35,14 @@ namespace FinalProject_Chess
         public PictureBox piece;
         public Point[,] point = new Point[8, 8];// the coordinate of each block
         public Panel table = new Panel();
-
+        public Point[,] temp_position = new Point[1,1];
 
         public Form1()
         {
             InitializeComponent();
             //map
+            temp_position[0,0] = new Point(600, 600);
+
             table.BackgroundImageLayout = ImageLayout.Stretch;
             table.Size = new Size(560, 560);
             table.Location = new Point(50, 50);
@@ -72,7 +74,7 @@ namespace FinalProject_Chess
                     }
                     return;
                 }
-                algorithm.AI(ref chess.map);
+                //algorithm.AI(ref chess.map);
                 for (int i = 0; i < 8; i++)
                 {
                     Console.WriteLine();
@@ -130,6 +132,13 @@ namespace FinalProject_Chess
                 }
                 Console.WriteLine();
                 // the piece is now moved to new location
+                temp = GetPictureBoxIndexFromLocation(y, x);
+                if (chess.map_NotNull)
+                {
+                    Console.Write(temp);
+
+                    pics[temp].Location = temp_position[0,0];
+                }
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;
             }
@@ -138,13 +147,15 @@ namespace FinalProject_Chess
                 // select the piece if player valid
                 if (chess.SelectPiece(y, x))
                 {
+                    //Console.WriteLine("ssss");
+                  
                     piece = pics[GetPictureBoxIndexFromLocation(y, x)];
                     piece.BackColor = Color.LightBlue;
                 }
 
             }
         }
-
+        public int temp;
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -187,6 +198,7 @@ namespace FinalProject_Chess
             {
                 if (pics[i].Location == point[row, col])
                 {
+                   Console.WriteLine(i);
                     return i;
                 }
             }
