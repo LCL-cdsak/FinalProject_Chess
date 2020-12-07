@@ -76,7 +76,7 @@ namespace FinalProject_Chess
                     }
                     return;
                 }
-                //algorithm.AI(ref chess.map);
+                algorithm.AI(ref chess.map);
                 for (int i = 0; i < 8; i++)
                 {
                     Console.WriteLine();
@@ -192,6 +192,7 @@ namespace FinalProject_Chess
                     pics[c - 1].Location = point[i, j];
                 }
             }
+
         }
         public int GetPictureBoxIndexFromLocation(int row, int col)
         {
