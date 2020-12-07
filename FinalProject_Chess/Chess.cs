@@ -25,7 +25,7 @@ namespace FinalProject_Chess
         public Dictionary<string, int[]> king_piece_locations = new Dictionary<string, int[]>();
         public Dictionary<string, Piece> king_pieces = new Dictionary<string, Piece>();
         public Piece protect_piece = null;
-        public bool map_NotNull = false;
+        public bool map_NotNull=false;
         // game status
         private string current_team = null;
         public bool is_selected_piece = false; // true when player has seleted a piece
@@ -46,7 +46,7 @@ namespace FinalProject_Chess
             map = CreateChessMapFromChar(init_map);
             // Game Init
             InitChessGame();
-
+            
         }
 
         public void InitChessGame()
@@ -56,9 +56,9 @@ namespace FinalProject_Chess
             is_selected_piece = false;
             string[] team_names = { "white", "black" };
 
-            foreach (string team_name in team_names)
+            foreach(string team_name in team_names)
             {
-                team_castling[team_name] = new bool[2] { true, true };
+                team_castling[team_name] = new bool[2] { true, true};
 
                 all_team_path[team_name] = new bool[8, 8];
 
@@ -93,7 +93,7 @@ namespace FinalProject_Chess
                     else
                     {
                         chess_map[row, col] = Piece.PieceFromChar(char_table[row, col]);
-                        if (chess_map[row, col].piece_type == Piece.PieceType.King)
+                        if(chess_map[row, col].piece_type == Piece.PieceType.King)
                         {
                             king_piece_locations[chess_map[row, col].team] = new int[2] { row, col };
                             king_pieces[chess_map[row, col].team] = chess_map[row, col];
@@ -114,7 +114,7 @@ namespace FinalProject_Chess
             }
             return map[row, col].valid_path;
         }
-
+        
         public void UpdateValidPath()
         {
             Console.WriteLine("UpdateValidPath");
@@ -122,11 +122,11 @@ namespace FinalProject_Chess
             check_path = null;
 
             // Init Piece Round
-            for (int i = 0; i < 8; ++i)
+            for (int i=0; i<8; ++i)
             {
-                for (int k = 0; k < 8; ++k)
+                for(int k=0; k<8; ++k)
                 {
-                    if (map[i, k] != null)
+                    if(map[i, k] != null)
                     {
                         map[i, k].RoundInitialize();
                     }
@@ -138,37 +138,37 @@ namespace FinalProject_Chess
             // Create thread_paths, and add to the protecting_piece, set is_check
             for (int row = 0; row < 8; ++row)
             {
-                for (int col = 0; col < 8; ++col)
+                for(int col = 0; col < 8; ++col)
                 {
-                    if (map[row, col] != null)
+                    if(map[row,col] != null)
                     {
                         temp_piece = map[row, col].Thread_path(row, col, map, ref is_check, ref check_path);// if is_check, check_path will be set
                         //Console.WriteLine($"{map[row, col].team} {map[row, col].piece_type.ToString()} {is_check}");
                         if (temp_piece != null)
                         {
                             // not check, but protecting
-                            if (temp_piece.team == current_team)
+                            if(temp_piece.team == current_team)
                                 protect_pieces.Add(temp_piece);
                         }
                     }
-
+                    
                 }
             }
 
             // Create valid_path, and do AND with protect_path
-            for (int row = 0; row < 8; ++row)
+            for(int row=0; row<8; ++row)
             {
-                for (int col = 0; col < 8; ++col)
+                for(int col=0; col<8; ++col)
                 {
                     if (map[row, col] != null)
                     {
-                        if (map[row, col].team == current_team)
+                        if(map[row, col].team == current_team)
                             map[row, col].valid_path = map[row, col].ValidPath(row, col, map);
                     }
                 }
             }
             Console.WriteLine($"Protect_pieces count = {protect_pieces.Count()}");
-            for (int i = 0; i < protect_pieces.Count(); ++i)
+            for(int i=0; i<protect_pieces.Count(); ++i)
             {
                 AndChessBoolMap(protect_pieces[i].valid_path, protect_pieces[i].protect_path);
             }
@@ -177,13 +177,13 @@ namespace FinalProject_Chess
             all_team_path["white"] = new bool[8, 8];
             all_team_path["black"] = new bool[8, 8];
             string enemy_team = (current_team == "white") ? "black" : "white";
-            for (int row = 0; row < 8; ++row)
+            for(int row=0; row<8; ++row)
             {
-                for (int col = 0; col < 8; ++col)
+                for(int col=0; col<8; ++col)
                 {
                     if (map[row, col] != null)
                     {
-                        if (map[row, col].team == enemy_team)
+                        if(map[row, col].team == enemy_team)
                         {
                             map[row, col].Team_path(row, col, map, all_team_path[enemy_team]);
                         }
@@ -199,13 +199,13 @@ namespace FinalProject_Chess
             if (is_check)
             {
                 MessageBox.Show("Check");
-                for (int row = 0; row < 8; ++row)
+                for(int row=0; row<8; ++row)
                 {
-                    for (int col = 0; col < 8; ++col)
+                    for(int col=0; col<8; ++col)
                     {
-                        if (map[row, col] != null)
+                        if(map[row, col] != null)
                         {
-                            if (map[row, col].team == current_team && map[row, col].piece_type != Piece.PieceType.King)
+                            if(map[row, col].team == current_team && map[row, col].piece_type != Piece.PieceType.King)
                             {
                                 temp_bool = AndChessBoolMap(map[row, col].valid_path, check_path);
                                 if (temp_bool)
@@ -293,7 +293,7 @@ namespace FinalProject_Chess
                 // no piece selected
                 return false;
             }
-            if (ValidPath(selected_piece_location[0], selected_piece_location[1]) == null)
+            if(ValidPath(selected_piece_location[0], selected_piece_location[1]) == null)
             {
                 MessageBox.Show("King Check", "NO", MessageBoxButtons.OK);
                 // not a valid path
@@ -323,7 +323,7 @@ namespace FinalProject_Chess
                 king_piece_locations[map[row, col].team][0] = row;
                 king_piece_locations[map[row, col].team][1] = col;
             }
-            //current_team = (current_team == "white") ? "black" : "white";
+        // current_team = (current_team == "white") ? "black" : "white";
             RoundInitialize();
             return true;
         }
@@ -333,12 +333,12 @@ namespace FinalProject_Chess
             map[row, col] = null;
         }
         public static bool AndChessBoolMap(bool[,] a, bool[,] b)
-        // The return value is true when at least one a&&b == true.
+            // The return value is true when at least one a&&b == true.
         {
             bool result = false;
-            for (int row = 0; row < 8; ++row)
+            for(int row=0; row<8; ++row)
             {
-                for (int col = 0; col < 8; ++col)
+                for(int col=0; col<8; ++col)
                 {
                     if (a[row, col] && b[row, col])
                         result = true;
@@ -352,15 +352,15 @@ namespace FinalProject_Chess
         {
             bool is_king_cant_move = true;
             int irow, icol;
-            for (int i = 0; i < 8; ++i)
+            for(int i=0; i<8; ++i)
             {
                 irow = row + Piece.king_offsets[i, 0];
                 icol = col + Piece.king_offsets[i, 1];
-                if (irow >= 0 && irow < 8 && icol >= 0 && icol < 8)
+                if(irow >=0 && irow <8 && icol >= 0 && icol < 8)
                 {
-                    if (king_valid_path[irow, icol])
+                    if(king_valid_path[irow, icol])
                     {
-                        if (all_team_path[irow, icol])
+                        if(all_team_path[irow, icol])
                         {
                             // danger location
                             king_valid_path[irow, icol] = false;
