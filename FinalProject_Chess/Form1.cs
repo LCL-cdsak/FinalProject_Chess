@@ -36,7 +36,8 @@ namespace FinalProject_Chess
         public Point[,] point = new Point[8, 8];// the coordinate of each block
         public Panel table = new Panel();
         public Point[,] temp_position = new Point[1, 1];
-
+        int[] best_path = new int[4];//[0] is fromx,[1] is fromy,[2] is tox,[3] is toy
+        public int temp;
         public Form1()
         {
             InitializeComponent();
@@ -76,8 +77,34 @@ namespace FinalProject_Chess
                     }
                     return;
                 }
-                int[] best_path = new int[4];//[0] is fromx,[1] is fromy,[2] is tox,[3] is toy
+                chess.RoundInitialize();
+                temp = GetPictureBoxIndexFromLocation(y, x); 
+                if (chess.map_NotNull)// determine whether there will be overlapping pieces
+                {
+                    pics[temp].Location = temp_position[0, 0];
+                }
+                piece.Location = point[y, x];
+                piece.BackColor = Color.Transparent;
+                //**************************************
+                //ai move chess map
                 best_path = algorithm.AI(ref chess.map);
+                if (chess.SelectPiece(best_path[0], best_path[1]))
+                {
+                    piece = pics[GetPictureBoxIndexFromLocation(best_path[0], best_path[1])];
+                    piece.BackColor = Color.LightBlue;
+                }
+                chess.MovePiece(best_path[2], best_path[3], out is_deselect);
+                chess.RoundInitialize();
+                //change picturebox
+                temp = GetPictureBoxIndexFromLocation(best_path[2], best_path[3]);
+                if (chess.map_NotNull)
+                {
+                    pics[temp].Location = temp_position[0, 0];
+                }
+                piece.Location = point[best_path[2], best_path[3]];
+                piece.BackColor = Color.Transparent;
+                //*****************************************
+                //Debug
                 for (int i = 0; i < 8; i++)
                 {
                     Console.WriteLine();
@@ -133,33 +160,18 @@ namespace FinalProject_Chess
                                 }
                         }
                 }
-                Console.WriteLine();
-                chess.RoundInitialize();
-                // the piece is now moved to new location
-                temp = GetPictureBoxIndexFromLocation(y, x);
-                if (chess.map_NotNull)
-                {
-                    Console.Write(temp);
-
-                    pics[temp].Location = temp_position[0, 0];
-                }
-                piece.Location = point[y, x];
-                piece.BackColor = Color.Transparent;
             }
             else
             {
                 // select the piece if player valid
                 if (chess.SelectPiece(y, x))
                 {
-                    //Console.WriteLine("ssss");
-
                     piece = pics[GetPictureBoxIndexFromLocation(y, x)];
                     piece.BackColor = Color.LightBlue;
                 }
 
             }
         }
-        public int temp;
         private void Form1_Load(object sender, EventArgs e)
         {
 

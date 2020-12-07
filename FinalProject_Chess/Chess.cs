@@ -262,6 +262,7 @@ namespace FinalProject_Chess
                 return false;
             if (map[row, col].team == current_team)
             {
+                //Console.WriteLine("debug");
                 is_selected_piece = true;
                 selected_piece_location[0] = row;
                 selected_piece_location[1] = col;
@@ -281,6 +282,7 @@ namespace FinalProject_Chess
                 // player want to deselect the piece, let it be a false move
                 is_selected_piece = false;
                 is_deselect = true;
+               
                 return false;
             }
             else
@@ -301,6 +303,7 @@ namespace FinalProject_Chess
             }
             if (!ValidPath(selected_piece_location[0], selected_piece_location[1])[row, col])
             {
+          
                 MessageBox.Show("NO", "NO", MessageBoxButtons.OK);
                 // not a valid path
                 return false;
@@ -323,7 +326,8 @@ namespace FinalProject_Chess
                 king_piece_locations[map[row, col].team][0] = row;
                 king_piece_locations[map[row, col].team][1] = col;
             }
-         current_team = (current_team == "white") ? "black" : "white";
+            current_team = (current_team == "white") ? "black" : "white";
+           
             RoundInitialize();
             return true;
         }
