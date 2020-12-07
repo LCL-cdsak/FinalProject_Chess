@@ -35,13 +35,13 @@ namespace FinalProject_Chess
         public PictureBox piece;
         public Point[,] point = new Point[8, 8];// the coordinate of each block
         public Panel table = new Panel();
-        public Point[,] temp_position = new Point[1,1];
+        public Point[,] temp_position = new Point[1, 1];
 
         public Form1()
         {
             InitializeComponent();
             //map
-            temp_position[0,0] = new Point(600, 600);
+            temp_position[0, 0] = new Point(600, 600);
 
             table.BackgroundImageLayout = ImageLayout.Stretch;
             table.Size = new Size(560, 560);
@@ -76,8 +76,8 @@ namespace FinalProject_Chess
                     }
                     return;
                 }
-               // algorithm.AI(ref chess.map);
-               // chess.RoundInitialize();
+                int[] best_path = new int[4];//[0] is fromx,[1] is fromy,[2] is tox,[3] is toy
+                best_path = algorithm.AI(ref chess.map);
                 for (int i = 0; i < 8; i++)
                 {
                     Console.WriteLine();
@@ -134,14 +134,14 @@ namespace FinalProject_Chess
                         }
                 }
                 Console.WriteLine();
+                chess.RoundInitialize();
                 // the piece is now moved to new location
                 temp = GetPictureBoxIndexFromLocation(y, x);
                 if (chess.map_NotNull)
                 {
-                    Console.WriteLine("debug");
                     Console.Write(temp);
 
-                    //pics[temp].Location = temp_position[0,0];
+                    pics[temp].Location = temp_position[0, 0];
                 }
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;
@@ -152,7 +152,7 @@ namespace FinalProject_Chess
                 if (chess.SelectPiece(y, x))
                 {
                     //Console.WriteLine("ssss");
-                  
+
                     piece = pics[GetPictureBoxIndexFromLocation(y, x)];
                     piece.BackColor = Color.LightBlue;
                 }
@@ -194,7 +194,6 @@ namespace FinalProject_Chess
                     pics[c - 1].Location = point[i, j];
                 }
             }
-
         }
         public int GetPictureBoxIndexFromLocation(int row, int col)
         {
@@ -202,7 +201,7 @@ namespace FinalProject_Chess
             {
                 if (pics[i].Location == point[row, col])
                 {
-                   Console.WriteLine(i);
+                    Console.WriteLine(i);
                     return i;
                 }
             }
