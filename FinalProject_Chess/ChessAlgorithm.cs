@@ -8,19 +8,18 @@ namespace FinalProject_Chess
 {
     class ChessAlgorithm
     {
-        /*
-  * score:
-  * pawn = 1
-  * knight = 4
-  * bishop = 5(if two bishops are alive,both plus 0.5)
-  * rook = 6
-  * queen = 11
-  * king = 1000
-  */
-
         public Chess chess;
-        /********************************version1*****************************************************************************
-        public int minmax(ref Piece[,] current, int layer, int max_layer, ref int fromx, ref int fromy, ref int tox, ref int toy)//current is map status，return point of a match
+        /*
+         * score:
+         * pawn = 10
+         * knight = 40
+         * bishop = 50(if two bishops are alive,both plus 0.5)
+         * rook = 60
+         * queen = 110
+         * king = 10000
+         */
+
+        public int minmax_first(ref Piece[,] current, int layer, int max_layer, ref int fromx, ref int fromy, ref int tox, ref int toy)//current is map status，return point of a match
         {
             int highest_score_of_a_match = int.MinValue;
             int x = int.MinValue;
@@ -73,7 +72,7 @@ namespace FinalProject_Chess
                                                                 current[c, d] = current[a, b];
                                                                 current[a, b] = null;
                                                                 //**********************************************
-                                                                int y = minmax(ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy);
+                                                                int y = minmax_first(ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy);
                                                                 x = x > y ? x : y;//選出子棋局最大的分數，紀錄在x裡
                                                                 if (highest_score_of_a_match < (x + z))
                                                                 {
@@ -105,9 +104,6 @@ namespace FinalProject_Chess
                 }
             return highest_score_of_a_match;
         }
-        ******************************************************************************************************/
-
-        //*********************version2***********************************************************************/
         public int calculate_point(ref Piece[,] current, int i, int j)
         {
             if (current[i, j] == null)
@@ -135,12 +131,15 @@ namespace FinalProject_Chess
                 }
             }
         }
-
+        //alpha-beta值用來記錄當前棋局最高分，不必要的就不需要遞迴下去
         public int minmax(int point, string status, ref Piece[,] current, int layer, int max_layer, ref int fromx, ref int fromy, ref int tox, ref int toy)//current is map status，return point of a match
         {
             int value = 0;
             if (layer == 0)
                 return point;
+
+            int alpha;
+            int beta;
             if (status == "black")
             {
                 value = int.MinValue;
@@ -149,7 +148,7 @@ namespace FinalProject_Chess
                     for (int j = 0; j < 8; j++)
                         if (current[i, j] == null || current[i, j].team == "white")
                             continue;
-                        else if(current[i,j].team=="black")
+                        else if (current[i, j].team == "black")
                         {
                             bool[,] path = current[i, j].ValidPath(i, j, current);
                             for (int m = 0; m < 8; m++)
@@ -162,7 +161,7 @@ namespace FinalProject_Chess
                                         current[m, n] = current[i, j];
                                         current[i, j] = null;
 
-                                        int c = minmax(point + k, "white", ref current, layer - 1, max_layer, ref fromx, ref fromy, ref tox, ref toy);
+                                        int c = minmax(point + k, "white", ref current, layer, max_layer, ref fromx, ref fromy, ref tox, ref toy);
                                         if (c >= value)
                                         {
                                             if (max_layer == layer)
@@ -213,16 +212,22 @@ namespace FinalProject_Chess
             return value;
         }
 
-        public void AI(ref Piece[,] map)
+        public int[] AI(ref Piece[,] map)
         {
+            int[] best_path = new int[4];
             int fromx = 0, fromy = 0, tox = 0, toy = 0;
-            minmax(0, "black", ref map, 3, 3, ref fromx, ref fromy, ref tox, ref toy);
-            bool is_deselect;
+            minmax(0, "black", ref map, 2, 2, ref fromx, ref fromy, ref tox, ref toy);
+            //bool is_deselect;
             //chess.is_selected_piece = false;
             //chess.SelectPiece(fromx, fromy);
             //chess.MovePiece(tox, toy, out is_deselect);
-            map[tox, toy] = map[fromx, fromy];
-            map[fromx, fromy] = null;
+            //map[tox, toy] = map[fromx, fromy];
+            //map[fromx, fromy] = null;
+            best_path[0] = fromx;
+            best_path[1] = fromy;
+            best_path[2] = tox;
+            best_path[3] = toy;
+            return best_path;
         }
     }
 }
