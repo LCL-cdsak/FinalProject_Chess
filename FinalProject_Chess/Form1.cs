@@ -76,7 +76,8 @@ namespace FinalProject_Chess
                     }
                     return;
                 }
-                algorithm.AI(ref chess.map);
+               // algorithm.AI(ref chess.map);
+               // chess.RoundInitialize();
                 for (int i = 0; i < 8; i++)
                 {
                     Console.WriteLine();
@@ -137,9 +138,10 @@ namespace FinalProject_Chess
                 temp = GetPictureBoxIndexFromLocation(y, x);
                 if (chess.map_NotNull)
                 {
+                    Console.WriteLine("debug");
                     Console.Write(temp);
 
-                    pics[temp].Location = temp_position[0,0];
+                    //pics[temp].Location = temp_position[0,0];
                 }
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;

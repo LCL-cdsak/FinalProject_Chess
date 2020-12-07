@@ -323,7 +323,7 @@ namespace FinalProject_Chess
                 king_piece_locations[map[row, col].team][0] = row;
                 king_piece_locations[map[row, col].team][1] = col;
             }
-        // current_team = (current_team == "white") ? "black" : "white";
+         current_team = (current_team == "white") ? "black" : "white";
             RoundInitialize();
             return true;
         }
