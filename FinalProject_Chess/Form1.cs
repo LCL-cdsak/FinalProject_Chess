@@ -85,6 +85,7 @@ namespace FinalProject_Chess
                 }
                 piece.Location = point[y, x];
                 piece.BackColor = Color.Transparent;
+                /*
                 //**************************************
                 //ai move chess map
                 best_path = algorithm.AI(ref chess.map);
@@ -104,6 +105,7 @@ namespace FinalProject_Chess
                 piece.Location = point[best_path[2], best_path[3]];
                 piece.BackColor = Color.Transparent;
                 //*****************************************
+                */
                 //Debug
                 for (int i = 0; i < 8; i++)
                 {

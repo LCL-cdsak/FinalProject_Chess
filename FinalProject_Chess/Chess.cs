@@ -282,7 +282,6 @@ namespace FinalProject_Chess
                 // player want to deselect the piece, let it be a false move
                 is_selected_piece = false;
                 is_deselect = true;
-               
                 return false;
             }
             else
